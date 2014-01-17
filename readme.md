@@ -53,6 +53,7 @@ Make sure the loadwatch script is set to 700 permissions.
 ### Todo
 
 * Output error if no EMAIL is specified
+* Automatic deletion of log files in /root/loadwatch after xx days?
 * Add nginx / typical ubuntu email agent debug info to loadwatch_ubuntu.sh
 * Add brief info paragraphs to each section of the report so that users have a better idea of what is being displayed.
 * Look for ways to expand the script to provide more relevant info
