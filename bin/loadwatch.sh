@@ -13,7 +13,7 @@ EMAILMESSAGE="/tmp/emailmessage.txt"
 
 # notification Email Address
 
-EMAIL="phillcoxon@gmail.com"
+EMAIL="root@localhost"
 
 #Load Threshold for doing a dump.
 THRESH=4
