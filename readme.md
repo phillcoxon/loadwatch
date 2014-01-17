@@ -54,6 +54,15 @@ Make sure the loadwatch script is set to 700 permissions.
 Log files are not deleted or trimmed currently and will continue growing over time.  
 
 
+### Acknowledgements
+
+* An awesome LiquidWeb.com staff member who gave me a copy of the base script.
+
+
+### Disclaimer
+
+* Use at your own risk - no warranty or support is provided. 
+
 ### Todo
 
 * Output error if no EMAIL is specified
@@ -63,13 +72,6 @@ Log files are not deleted or trimmed currently and will continue growing over ti
 * Add nginx / typical ubuntu email agent debug info to loadwatch_ubuntu.sh
 * Add brief info paragraphs to each section of the report so that users have a better idea of what is being displayed.
 * Look for ways to expand the script to provide more relevant info
+	* Here: http://forums.cpanel.net/f34/troubleshooting-high-server-loads-linux-servers-319352.html 
+	* Notes stored under 'Server' in Evernote
 
-
-### Acknowledgements
-
-* An awesome LiquidWeb.com staff member who gave me a copy of the base script.
-
-
-### Disclaimer
-
-* Use at your own risk - no warranty or support is provided. 
