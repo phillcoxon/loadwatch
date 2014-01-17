@@ -2,7 +2,7 @@
 
 ### Email notification + diagnostics emailed when a preset server load is triggerd.  
 
-* loadwatch.sh - for WHM/cPanel servers running on Centos
+* loadwatch_cpanel.sh - for WHM/cPanel servers running on Centos
 * loadwatch_ubuntu.sh - ubuntu servers running nginx
 
 
@@ -17,7 +17,7 @@ touch /root/loadwatch/bin/loadwatch.sh
 chmod 700 /root/loadwatch/bin/loadwatch.sh
 vim /root/loadwatch/bin/loadwatch.sh    
 ```
-Copy and paste the contents of loadwatch.sh into vim and save. 
+Copy and paste the contents of the correct loadwatch.sh into vim and save. 
 
 **Using git:**
 
@@ -61,3 +61,8 @@ Make sure the loadwatch script is set to 700 permissions.
 ### Acknowledgements
 
 * An awesome LiquidWeb.com staff member who gave me a copy of the base script.
+
+
+### Disclaimer
+
+* Use at your own risk - no warranty or support is provided. 
