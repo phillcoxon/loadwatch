@@ -39,7 +39,7 @@ For a single CPU server using '4' for the load level is fairly typical.
 
 ### Set up Cron
 
-Next, edit your crontab and insert the entry below which will run loadwatch.sh every 3 minutes to check server load and generate a report of the load is over the set threshold.
+Next, edit your crontab and insert the entry below which will run loadwatch.sh every 20 minutes to check server load and generate a report of the load is over the set threshold.
 
 ```
 crontab -e  
