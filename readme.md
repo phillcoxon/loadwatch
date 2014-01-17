@@ -49,11 +49,17 @@ crontab -e
 
 Make sure the loadwatch script is set to 700 permissions. 
 
+### Warning
+
+Log files are not deleted or trimmed currently and will continue growing over time.  
+
 
 ### Todo
 
 * Output error if no EMAIL is specified
-* Automatic deletion of log files in /root/loadwatch after xx days?
+* Automatic deletion of log files in /root/loadwatch after 30 days?
+	* Test :  find . -name "loadwatch-log*" -type f -mtime +30 -delete
+	* How? :  limit checklog to 1000 lines? Size check, head -1000 to new file, replace old file?
 * Add nginx / typical ubuntu email agent debug info to loadwatch_ubuntu.sh
 * Add brief info paragraphs to each section of the report so that users have a better idea of what is being displayed.
 * Look for ways to expand the script to provide more relevant info
