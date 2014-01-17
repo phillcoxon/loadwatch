@@ -8,11 +8,11 @@
 To install loadwatch.sh manually: 
 
 
-```mkdir /root/bin
-mkdir /root/loadwatch
-touch /root/bin/loadwatch.sh
-chmod 700 /root/bin/loadwatch.sh
-vim /root/bin/loadwatch.sh    #(copy and paste loadwatch.sh into here)
+```mkdir /root/loadwatch
+mkdir /root/loadwatch/bin/
+touch /root/loadwatch/bin/loadwatch.sh
+chmod 700 /root/loadwatch/bin/loadwatch.sh
+vim /root/loadwatch/bin/loadwatch.sh    #(copy and paste loadwatch.sh into here)
 ```
 
 Next, edit your crontab and insert the entry below which will run loadwatch.sh every 3 minutes to check server load and generate a report of the load is over the set threshold.
@@ -20,8 +20,10 @@ Next, edit your crontab and insert the entry below which will run loadwatch.sh e
 ```
 crontab -e     #edit yor
 
-*/3 * * * * /root/bin/loadwatch.sh > /dev/null 2>&1
+*/3 * * * * /root/loadwatch/bin/loadwatch.sh > /dev/null 2>&1
 ```
+
+Make sure the loadwatch script is set to 700 permissions. 
 
 
 ### Configure
