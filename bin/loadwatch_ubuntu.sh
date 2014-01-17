@@ -64,8 +64,10 @@ then
         top -bcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
+	# Note - no -m argument on top for unbuntu?
+
 	echo '######## Mem top 20 ########' >> $DIR/$FILE
-        top -bmcn1 | head -n 26 >> $DIR/$FILE
+        top -bcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	#mysql
