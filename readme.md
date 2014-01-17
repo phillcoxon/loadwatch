@@ -25,9 +25,10 @@ Copy and paste the contents of loadwatch.sh into vim and save.
 cd /root
 git clone https://github.com/getresults/loadwatch.git
 cd loadwatch/bin
+cp loadwatch_cpanel.sh loadwatch.sh
 chmod 700 loadwatch.sh
 ```
-Rename loadwatch_ubuntu.sh to loadwatch.sh if on an Ubuntu based server
+Copy loadwatch_ubuntu.sh to loadwatch.sh if on an Ubuntu based server
 
 ### Configure
 
