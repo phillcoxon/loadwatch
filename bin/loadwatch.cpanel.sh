@@ -27,7 +27,7 @@ if [ $LOAD -ge $THRESH ]
 then
 	#log 
 	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> $DIR/checklog
-	echo -e "\nCurrent server time: " . `date +"%u %d-%m-%y %T"` >> $DIR/$FILE
+	echo -e "\nCurrent server time: " . `date +"%c"` >> $DIR/$FILE
 	#echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
 
 	#email (optional, set email address to customer and uncomment below lines)
@@ -85,7 +85,7 @@ then
 	# Note - should be -S on newer versions of sar.  At the moment WHM/cPanel seems to be running sar V9.0.4
 
 	echo -e "######## Historical Memory Usage (sar -r): ########\n" >> $DIR/$FILE
-	sar -S >> $DIR/$FILE
+	sar -r >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Disk IO
