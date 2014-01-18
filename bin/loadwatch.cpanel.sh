@@ -26,16 +26,16 @@ echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
 if [ $LOAD -ge $THRESH ]
 then
 	#log 
-	echo Loadwatch tripped, dumping info to $DIR/$FILE >> $DIR/checklog
-	echo `date +%F.%H.%M` > $DIR/$FILE
-	echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
+	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> $DIR/checklog
+	echo -e "\nCurrent server time: ".`date +"%u %d-%m-%y %T` > $DIR/$FILE
+	#echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
 
 	#email (optional, set email address to customer and uncomment below lines)
 
 	#/bin/mail -s "$SUBJECT" "$EMAIL" < $EMAILMESSAGE
 
 	#summary
-	echo -e "\n\nSummary------------------------------------------------------------\n\n" >> $DIR/$FILE
+	echo -e "\nSummary------------------------------------------------------------\n\n" >> $DIR/$FILE
         NUMHTTPD=`ps aux|grep httpd|wc -l`
 	echo "Number of HTTPD Processes: $NUMHTTPD" >> $DIR/$FILE
 	HTTPDCPU=`ps aux|grep httpd|awk '{sum+=$3} END {print sum}'`
@@ -57,18 +57,18 @@ then
 	MYSQLMEM=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'}`
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> $DIR/$FILE
 	
-	echo -e "######## Uptime: ########\n" >> $DIR/$FILE
+	echo -e "\n######## Uptime: ########\n" >> $DIR/$FILE
 	uptime >> $DIR/$FILE
 
-	echo -e "######## Free Memory (Mb): ########\n" >> $DIR/$FILE
+	echo -e "\n######## Free Memory (Mb): ########\n" >> $DIR/$FILE
 	free -m >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-	echo -e '######## CPU top 20 ########\n' >> $DIR/$FILE
+	echo -e '\n######## CPU top 20 ########\n' >> $DIR/$FILE
         top -bcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-	echo -e '######## Mem top 20 ########\n' >> $DIR/$FILE
+	echo -e '\n######## Mem top 20 ########\n' >> $DIR/$FILE
         top -bmcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
