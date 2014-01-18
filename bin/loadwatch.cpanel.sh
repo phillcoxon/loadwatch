@@ -27,7 +27,7 @@ if [ $LOAD -ge $THRESH ]
 then
 	#log 
 	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> $DIR/checklog
-	echo -e "\nCurrent server time: ".`date +"%u %d-%m-%y %T` > $DIR/$FILE
+	echo -e "\nCurrent server time: " . `date +"%u %d-%m-%y %T"` >> $DIR/$FILE
 	#echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
 
 	#email (optional, set email address to customer and uncomment below lines)
