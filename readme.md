@@ -67,7 +67,9 @@ Log files are not deleted or trimmed currently and will continue growing over ti
 
 * Output error if no EMAIL is specified
 * Automatic deletion of log files in /root/loadwatch after 30 days?
-	* Test :  find . -name "loadwatch-log*" -type f -mtime +30 -delete
+* List of required packages
+* Improve Ubuntu version to match 'sar' type reporting if possible.
+	* Test :  find /root/loadwatch -name "loadwatch-log*" -type f -mtime +30 -delete (UNTESTED - DON'T USE!)
 	* How? :  limit checklog to 1000 lines? Size check, head -1000 to new file, replace old file?
 * Add nginx / typical ubuntu email agent debug info to loadwatch_ubuntu.sh
 * Add brief info paragraphs to each section of the report so that users have a better idea of what is being displayed.

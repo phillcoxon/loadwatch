@@ -56,17 +56,51 @@ then
 	echo "MYSQL CPU consumption: $MYSQLCPU %" >> $DIR/$FILE
 	MYSQLMEM=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'}`
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> $DIR/$FILE
+	
+	echo "Uptime:\n"
 	uptime >> $DIR/$FILE
+
+	echo "Free Memory (Mb):\n"
 	free -m >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-	echo '######## CPU top 20 ########' >> $DIR/$FILE
+	echo '######## CPU top 20 ########\n' >> $DIR/$FILE
         top -bcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-	echo '######## Mem top 20 ########' >> $DIR/$FILE
+	echo '######## Mem top 20 ########\n' >> $DIR/$FILE
         top -bmcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
+
+	# -- NOTE:  WHM/cPanel Only by default (requires sar) ---
+
+
+	# Historical CPU Usage
+
+	echo "\nHistorical CPU Usage (sar -p):\n"
+	sar -p >> $DIR/$FILE
+	echo " " >> $DIR/$FILE
+
+	# Historical Memory Usage
+
+	echo "\nHistorical Memory Usage (sar -S):\n"
+	sar -S >> $DIR/$FILE
+	echo " " >> $DIR/$FILE
+
+	# Historical Disk IO
+
+	echo "\nHistorical Disk I/O Usage (sar -d):\n"
+	sar -d >> $DIR/$FILE
+	echo " " >> $DIR/$FILE
+
+
+	echo "\nSites with traffic in the last 60 seconds:\n"
+	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> $DIR/$FILE
+
+
+	# -- End:  WHM/cPanel Only by default (requires sar) ---
+
+
 
 	#mysql
 	echo -e "\n\nMySQL:------------------------------------------------------------\n\n" >> $DIR/$FILE
