@@ -57,10 +57,10 @@ then
 	MYSQLMEM=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'}`
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> $DIR/$FILE
 	
-	echo -e "######## Uptime: ########\n"
+	echo -e "######## Uptime: ########\n" >> $DIR/$FILE
 	uptime >> $DIR/$FILE
 
-	echo -e "######## Free Memory (Mb): ########\n"
+	echo -e "######## Free Memory (Mb): ########\n" >> $DIR/$FILE
 	free -m >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
@@ -95,7 +95,7 @@ then
 	echo " " >> $DIR/$FILE
 
 
-	echo -e "######## Sites with traffic in the last 60 seconds: ########\n"
+	echo -e "######## Sites with traffic in the last 60 seconds: ########\n" >> $DIR/$FILE
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> $DIR/$FILE
 
 
