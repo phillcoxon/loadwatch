@@ -57,10 +57,10 @@ then
 	MYSQLMEM=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'}`
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> $DIR/$FILE
 	
-	echo "Uptime:\n"
+	echo -e "######## Uptime: ########\n"
 	uptime >> $DIR/$FILE
 
-	echo "Free Memory (Mb):\n"
+	echo -e "######## Free Memory (Mb): ########\n"
 	free -m >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
@@ -77,25 +77,25 @@ then
 
 	# Historical CPU Usage
 
-	echo -e "\nHistorical CPU Usage (sar -p):\n" >> $DIR/$FILE
+	echo -e "######## Historical CPU Usage (sar -p): ########\n" >> $DIR/$FILE
 	sar -p >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Memory Usage
 	# Note - should be -S on newer versions of sar.  At the moment WHM/cPanel seems to be running sar V9.0.4
 
-	echo -e "\nHistorical Memory Usage (sar -r):\n" >> $DIR/$FILE
+	echo -e "######## Historical Memory Usage (sar -r): ########\n" >> $DIR/$FILE
 	sar -S >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Disk IO
 
-	echo -e "\nHistorical Disk I/O Usage (sar -d):\n" >> $DIR/$FILE
+	echo -e "######## Historical Disk I/O Usage (sar -d): ########\n" >> $DIR/$FILE
 	sar -d >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 
-	echo -e "\nSites with traffic in the last 60 seconds:\n"
+	echo -e "######## Sites with traffic in the last 60 seconds: ########\n"
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> $DIR/$FILE
 
 
