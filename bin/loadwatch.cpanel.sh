@@ -64,11 +64,11 @@ then
 	free -m >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-	echo '######## CPU top 20 ########\n' >> $DIR/$FILE
+	echo -e '######## CPU top 20 ########\n' >> $DIR/$FILE
         top -bcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-	echo '######## Mem top 20 ########\n' >> $DIR/$FILE
+	echo -e '######## Mem top 20 ########\n' >> $DIR/$FILE
         top -bmcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
@@ -77,24 +77,25 @@ then
 
 	# Historical CPU Usage
 
-	echo "\nHistorical CPU Usage (sar -p):\n"
+	echo -e "\nHistorical CPU Usage (sar -p):\n" >> $DIR/$FILE
 	sar -p >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Memory Usage
+	# Note - should be -S on newer versions of sar.  At the moment WHM/cPanel seems to be running sar V9.0.4
 
-	echo "\nHistorical Memory Usage (sar -S):\n"
+	echo -e "\nHistorical Memory Usage (sar -r):\n" >> $DIR/$FILE
 	sar -S >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Disk IO
 
-	echo "\nHistorical Disk I/O Usage (sar -d):\n"
+	echo -e "\nHistorical Disk I/O Usage (sar -d):\n" >> $DIR/$FILE
 	sar -d >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 
-	echo "\nSites with traffic in the last 60 seconds:\n"
+	echo -e "\nSites with traffic in the last 60 seconds:\n"
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> $DIR/$FILE
 
 
