@@ -1,6 +1,6 @@
 #!/bin/bash
 # let's add a version num for easier identification:
-# PAC version 0.1
+# PAC version 0.2
 # NOTE:  Need to monitor logfiles as they will keep growing and need to be deleted
 
 #config
