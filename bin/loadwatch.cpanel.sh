@@ -1,11 +1,11 @@
 #!/bin/bash
 # let's add a version num for easier identification:
 # PAC version 0.1
-
 # NOTE:  Need to monitor logfiles as they will keep growing and need to be deleted
 
 #config
 FILE=loadwatch.`date +%F.%H.%M`
+#loadwatch log directory
 DIR=/root/loadwatch
 COLUMNS=512
 SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
@@ -20,12 +20,15 @@ THRESH=4
 
 #pull load average, log
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
-echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
 
 #trip
 if [ $LOAD -ge $THRESH ]
 then
-	#log 
+	# Only log triggered loads. 
+	echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
+        echo -e "Loadwatch Threshhold: $THRESH, Current Load: $LOAD" >> $DIR/$FILE
+        
+        #log 
 	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> $DIR/checklog
 	echo -e "\nCurrent server time: " . `date +"%c"` >> $DIR/$FILE
 	#echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
