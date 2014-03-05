@@ -170,7 +170,7 @@ then
 	mysqladmin proc >> $DIR/$FILE
 
 	# MySQL Tuner
-	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------\n\n" >> $DIR/$FILE
+	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------" >> $DIR/$FILE
 	$PERL $MYSQL_TUNER >> $DIR/$FILE
 
 	# Apache
