@@ -65,7 +65,7 @@ done
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
 
 # Trip (check whether or not to run it)
-if [ [ $LOAD -ge $THRESH ] || [ $FORCE == "1" ] ]
+if [ ([$LOAD -ge $THRESH]) || ([$FORCE == "1"]) ]
 then
 
 	# Only log triggered loads. 
