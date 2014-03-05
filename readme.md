@@ -14,8 +14,8 @@
 mkdir /root/loadwatch
 mkdir /root/loadwatch/bin/
 touch /root/loadwatch/bin/loadwatch.sh
-chmod 700 /root/loadwatch/bin/loadwatch.sh
-vim /root/loadwatch/bin/loadwatch.sh    
+chmod u+x /root/loadwatch/bin/loadwatch.sh
+vim /root/loadwatch/bin/loadwatch.sh
 ```
 Copy and paste the contents of the correct loadwatch.sh into vim and save. 
 
@@ -26,7 +26,8 @@ cd /root
 git clone https://github.com/getresults/loadwatch.git
 cd loadwatch/bin
 cp loadwatch_cpanel.sh loadwatch.sh
-chmod 700 loadwatch.sh
+chmod u+x loadwatch.sh
+chmod u+x thirdparty/mysqltuner.pl
 ```
 Copy loadwatch_ubuntu.sh to loadwatch.sh if on an Ubuntu based server
 
