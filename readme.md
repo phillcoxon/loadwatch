@@ -1,6 +1,6 @@
 #LoadWatch 
 
-### Email notification + diagnostics emailed when a preset server load is triggerd.  
+### Email notification + diagnostics emailed when a preset server load is triggered.  
 
 * loadwatch_cpanel.sh - for WHM/cPanel servers running on Centos
 * loadwatch_ubuntu.sh - ubuntu servers running nginx
