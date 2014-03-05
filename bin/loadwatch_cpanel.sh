@@ -3,13 +3,16 @@
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 # Config
-FILE=loadwatch.`date +%F.%H.%M`
+FILE=loadwatch.`date +%F.%H.%M.%S`
 
 # Loadwatch log directory
 DIR=/root/loadwatch
 COLUMNS=512
 SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
 EMAILMESSAGE="/tmp/emailmessage.txt"
+
+# Delete when "X" days old
+DELETEWHEN="5"
 
 # Notification Email Address
 EMAIL="root@localhost"
@@ -21,8 +24,9 @@ THRESH=4
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
 
 # Trip (check whether or not to run it)
-if [ $LOAD -ge $THRESH ]
-then
+#if [ $LOAD -ge $THRESH ]
+#then
+
 	# Only log triggered loads. 
 	echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
         echo -e "Loadwatch Threshhold: $THRESH, Current Load: $LOAD" >> $DIR/$FILE
@@ -136,4 +140,7 @@ then
  	# Email the notification + summary
     /bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
 
-fi
+#fi
+
+# Clean up to remove files older than x days
+find $DIR/loadwatch.* -mtime +$DELETEWHEN -exec rm {} \;
