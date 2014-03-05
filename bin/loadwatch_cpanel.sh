@@ -77,13 +77,13 @@ done
 if [[ $INIT = 1 ]];
 then
 
-	echo "Setting things up...\n";
+	echo "Setting things up...";
 
-	echo "Going into loadwatch directory..."; cd $DIR/bin;	echo "done.\n";
-	echo "Copying cPanel script to safe, usable, file..."; cp $DIR/bin/loadwatch_cpanel.sh $DIR/bin/loadwatch.sh;	echo "done.\n";
-	echo "Setting permissions on Loadwatch script..."; chmod u+x $DIR/bin/loadwatch.sh;	echo "done.\n";
-	echo "Setting permissions on MySQL Tuner script..."; chmod u+x $DIR/bin/thirdparty/mysqltuner.pl;	echo "done.\n";
-	echo "Going back to the loadwatch directory..."; cd $DIR;	echo "done.\n";
+	echo "Going into loadwatch directory..."; cd $DIR/bin;
+	echo "Copying cPanel script to safe, usable, file..."; cp $DIR/bin/loadwatch_cpanel.sh $DIR/bin/loadwatch.sh;
+	echo "Setting permissions on Loadwatch script..."; chmod u+x $DIR/bin/loadwatch.sh;
+	echo "Setting permissions on MySQL Tuner script..."; chmod u+x $DIR/bin/thirdparty/mysqltuner.pl;
+	echo "Going back to the loadwatch directory..."; cd $DIR;
 
 	echo "Okay. All done! :)";
 
