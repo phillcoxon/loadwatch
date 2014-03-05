@@ -1,6 +1,6 @@
 #LoadWatch 
 
-### Email notification + diagnostics emailed when a preset server load is triggerd.  
+### Email notification + diagnostics emailed when a preset server load is triggered.  
 
 * loadwatch_cpanel.sh - for WHM/cPanel servers running on Centos
 * loadwatch_ubuntu.sh - ubuntu servers running nginx
@@ -8,16 +8,15 @@
 
 ### Install
 
-**To install loadwatch.sh manually:** 
+**Using git + our init script:**
+
+This is the fastest way to get up and running. Let us handle the installation for you!
 
 ```
-mkdir /root/loadwatch
-mkdir /root/loadwatch/bin/
-touch /root/loadwatch/bin/loadwatch.sh
-chmod 700 /root/loadwatch/bin/loadwatch.sh
-vim /root/loadwatch/bin/loadwatch.sh    
+cd /root; git clone https://github.com/getresults/loadwatch.git;
+cd loadwatch
+sh bin/loadwatch_cpanel.sh --init
 ```
-Copy and paste the contents of the correct loadwatch.sh into vim and save. 
 
 **Using git:**
 
@@ -26,8 +25,21 @@ cd /root
 git clone https://github.com/getresults/loadwatch.git
 cd loadwatch/bin
 cp loadwatch_cpanel.sh loadwatch.sh
-chmod 700 loadwatch.sh
+chmod u+x loadwatch.sh
+chmod u+x thirdparty/mysqltuner.pl
 ```
+
+**To install loadwatch.sh manually:** 
+
+```
+mkdir /root/loadwatch
+mkdir /root/loadwatch/bin/
+touch /root/loadwatch/bin/loadwatch.sh
+chmod u+x /root/loadwatch/bin/loadwatch.sh
+vim /root/loadwatch/bin/loadwatch.sh
+```
+Copy and paste the contents of the correct loadwatch.sh into vim and save. 
+
 Copy loadwatch_ubuntu.sh to loadwatch.sh if on an Ubuntu based server
 
 ### Configure

@@ -2,6 +2,11 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
+# get binaries and their paths
+PHP=`which php`
+PERL=`which perl`
+MYSQL=`which mysql`
+
 # Config
 FILE=loadwatch.`date +%F.%H.%M.%S`
 
@@ -12,7 +17,7 @@ SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
 EMAILMESSAGE="/tmp/emailmessage.txt"
 
 # Delete when "X" days old
-REMOVE="5"
+REMOVE="30"
 
 # Notification Email Address
 EMAIL="root@localhost"
@@ -20,6 +25,8 @@ EMAIL="root@localhost"
 # Load Threshold for doing a dump (4 is a good number to start with)
 THRESH=4
 
+# Option to include MySQL Tuner results
+MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
 
 
 ######################################################################################################
@@ -32,7 +39,7 @@ FORCE=0
 # Useful functions to help with organization
 function usage
 {
-    echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force] [-h | --help]"
+    echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force]  [--init] [-h | --help]"
 }
 
 # get parameters so we can tailor use of the script on the fly without editing
@@ -53,6 +60,8 @@ while [ "$1" != "" ]; do
         -t | --threshold )      shift
                                 THRESH=$1
                                 ;;
+        --init )                INIT=1
+                                ;;
         -x | --force )          FORCE=1
                                 ;;
         -h | --help )           usage
@@ -63,6 +72,23 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
+
+# If INIT is triggered, we'll handle the basic setup for you
+if [[ $INIT = 1 ]];
+then
+
+	echo "Setting things up...";
+
+	echo "Going into loadwatch directory..."; cd $DIR/bin;
+	echo "Copying cPanel script to safe, usable, file..."; cp $DIR/bin/loadwatch_cpanel.sh $DIR/bin/loadwatch.sh;
+	echo "Setting permissions on Loadwatch script..."; chmod u+x $DIR/bin/loadwatch.sh;
+	echo "Setting permissions on MySQL Tuner script..."; chmod u+x $DIR/bin/thirdparty/mysqltuner.pl;
+	echo "Going back to the loadwatch directory..."; cd $DIR;
+
+	echo "Okay. All done! :)";
+
+	exit
+fi
 
 # Pull load average, log
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
@@ -112,7 +138,7 @@ then
 	echo " " >> $DIR/$FILE
 
 	# Current Disk Usage
-	echo -e "######## Current Disk Usage (df -h): ########\n" >> $DIR/$FILE
+	echo -e "\n######## Current Disk Usage (df -h): ########\n" >> $DIR/$FILE
 	df -h >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
@@ -162,6 +188,10 @@ then
 	mysqladmin stat >> $DIR/$FILE
 	mysqladmin proc >> $DIR/$FILE
 
+	# MySQL Tuner
+	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------" >> $DIR/$FILE
+	$PERL $MYSQL_TUNER >> $DIR/$FILE
+
 	# Apache
 	echo -e "\n\nApache Full Status------------------------------------------------\n\n" >> $DIR/$FILE
 	/sbin/service httpd fullstatus >> $DIR/$FILE
@@ -183,7 +213,7 @@ then
 	ps auxf >> $DIR/$FILE
 
  	# Email the notification + summary
-    /bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
+	/bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
 
 fi
 
