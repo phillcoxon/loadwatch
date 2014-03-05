@@ -172,7 +172,7 @@ then
 	# MySQL Tuner
 	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------\n\n" >> $DIR/$FILE
 	echo $PERL MYSQL_TUNER
-	$PERL MYSQL_TUNER >> $DIR/$FILE
+	$PERL $MYSQL_TUNER >> $DIR/$FILE
 
 	# Apache
 	echo -e "\n\nApache Full Status------------------------------------------------\n\n" >> $DIR/$FILE
