@@ -8,6 +8,19 @@
 
 ### Install
 
+**Using git:**
+
+This is the fastest way to get up and running. Let us handle the installation for you!
+
+```
+cd /root
+git clone https://github.com/getresults/loadwatch.git
+cd loadwatch/bin
+cp loadwatch_cpanel.sh loadwatch.sh
+chmod u+x loadwatch.sh
+chmod u+x thirdparty/mysqltuner.pl
+```
+
 **To install loadwatch.sh manually:** 
 
 ```
@@ -19,16 +32,6 @@ vim /root/loadwatch/bin/loadwatch.sh
 ```
 Copy and paste the contents of the correct loadwatch.sh into vim and save. 
 
-**Using git:**
-
-```
-cd /root
-git clone https://github.com/getresults/loadwatch.git
-cd loadwatch/bin
-cp loadwatch_cpanel.sh loadwatch.sh
-chmod u+x loadwatch.sh
-chmod u+x thirdparty/mysqltuner.pl
-```
 Copy loadwatch_ubuntu.sh to loadwatch.sh if on an Ubuntu based server
 
 ### Configure
