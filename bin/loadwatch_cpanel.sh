@@ -12,7 +12,7 @@ SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
 EMAILMESSAGE="/tmp/emailmessage.txt"
 
 # Delete when "X" days old
-DELETEWHEN="5"
+REMOVE="5"
 
 # Notification Email Address
 EMAIL="root@localhost"
@@ -20,12 +20,53 @@ EMAIL="root@localhost"
 # Load Threshold for doing a dump (4 is a good number to start with)
 THRESH=4
 
+
+
+######################################################################################################
+################################# PLEASE DO NOT EDIT BELOW THIS LINE #################################
+######################################################################################################
+
+# Useful functions to help with organization
+function usage
+{
+    echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force] [-h | --help]"
+}
+
+# get parameters so we can tailor use of the script on the fly without editing
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --dir )            shift
+                                DIR=$1
+                                ;;
+        -e | --email )          shift
+                                EMAIL=$1
+                                ;;
+        -f | --file )           shift
+                                FILE=$1
+                                ;;
+        -r | --remove )         shift
+                                REMOVE=$1
+                                ;;
+        -t | --threshold )      shift
+                                THRESH=$1
+                                ;;
+        -x | --force )          FORCE=1
+                                ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
 # Pull load average, log
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
 
 # Trip (check whether or not to run it)
-#if [ $LOAD -ge $THRESH ]
-#then
+if [ $LOAD -ge $THRESH || $FORCE = "1" ]
+then
 
 	# Only log triggered loads. 
 	echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
@@ -140,7 +181,7 @@ LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
  	# Email the notification + summary
     /bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
 
-#fi
+fi
 
 # Clean up to remove files older than x days
-find $DIR/loadwatch.* -mtime +$DELETEWHEN -exec rm {} \;
+find $DIR/loadwatch.* -mtime +$REMOVE -exec rm {} \;
