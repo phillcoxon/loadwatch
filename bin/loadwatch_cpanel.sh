@@ -1,29 +1,76 @@
 #!/bin/bash
-# let's add a version num for easier identification:
-# PAC version 0.2
-# NOTE:  Need to monitor logfiles as they will keep growing and need to be deleted
+# Created by:	Liquid Web
+# Enhanced by:	Phill Coxon, Will Ashworth
 
-#config
-FILE=loadwatch.`date +%F.%H.%M`
-#loadwatch log directory
+# Config
+FILE=loadwatch.`date +%F.%H.%M.%S`
+
+# Loadwatch log directory
 DIR=/root/loadwatch
 COLUMNS=512
 SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
 EMAILMESSAGE="/tmp/emailmessage.txt"
 
-# notification Email Address
+# Delete when "X" days old
+REMOVE="5"
 
+# Notification Email Address
 EMAIL="root@localhost"
 
-#Load Threshold for doing a dump.
+# Load Threshold for doing a dump (4 is a good number to start with)
 THRESH=4
 
-#pull load average, log
+
+
+######################################################################################################
+################################# PLEASE DO NOT EDIT BELOW THIS LINE #################################
+######################################################################################################
+
+# Other Variables
+FORCE=0
+
+# Useful functions to help with organization
+function usage
+{
+    echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force] [-h | --help]"
+}
+
+# get parameters so we can tailor use of the script on the fly without editing
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --dir )            shift
+                                DIR=$1
+                                ;;
+        -e | --email )          shift
+                                EMAIL=$1
+                                ;;
+        -f | --file )           shift
+                                FILE=$1
+                                ;;
+        -r | --remove )         shift
+                                REMOVE=$1
+                                ;;
+        -t | --threshold )      shift
+                                THRESH=$1
+                                ;;
+        -x | --force )          FORCE=1
+                                ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+# Pull load average, log
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
 
-#trip
-if [ $LOAD -ge $THRESH ]
+# Trip (check whether or not to run it)
+if [[ $LOAD -eq $THRESH ]] || [[ $FORCE = 1 ]];
 then
+
 	# Only log triggered loads. 
 	echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
         echo -e "Loadwatch Threshhold: $THRESH, Current Load: $LOAD" >> $DIR/$FILE
@@ -31,10 +78,9 @@ then
         #log 
 	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> $DIR/checklog
 	echo -e "\nCurrent server time: " . `date +"%c"` >> $DIR/$FILE
-	#echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
+	echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
 
 	#email (optional, set email address to customer and uncomment below lines)
-
 	#/bin/mail -s "$SUBJECT" "$EMAIL" < $EMAILMESSAGE
 
 	#summary
@@ -59,18 +105,28 @@ then
 	echo "MYSQL CPU consumption: $MYSQLCPU %" >> $DIR/$FILE
 	MYSQLMEM=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'}`
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> $DIR/$FILE
-	
+
+	# Uptime
 	echo -e "\n######## Uptime: ########\n" >> $DIR/$FILE
 	uptime >> $DIR/$FILE
+	echo " " >> $DIR/$FILE
 
+	# Current Disk Usage
+	echo -e "######## Current Disk Usage (df -h): ########\n" >> $DIR/$FILE
+	df -h >> $DIR/$FILE
+	echo " " >> $DIR/$FILE
+
+	# Free Memory (Mb)
 	echo -e "\n######## Free Memory (Mb): ########\n" >> $DIR/$FILE
 	free -m >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
+	# CPU top 20
 	echo -e '\n######## CPU top 20 ########\n' >> $DIR/$FILE
         top -bcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
+	# Memory top 20
 	echo -e '\n######## Mem top 20 ########\n' >> $DIR/$FILE
         top -bmcn1 | head -n 26 >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
@@ -79,61 +135,57 @@ then
 
 
 	# Historical CPU Usage
-
 	echo -e "######## Historical CPU Usage (sar -p): ########\n" >> $DIR/$FILE
 	sar -p >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Memory Usage
 	# Note - should be -S on newer versions of sar.  At the moment WHM/cPanel seems to be running sar V9.0.4
-
 	echo -e "######## Historical Memory Usage (sar -r): ########\n" >> $DIR/$FILE
 	sar -r >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# Historical Disk IO
-
 	echo -e "######## Historical Disk I/O Usage (sar -d): ########\n" >> $DIR/$FILE
 	sar -d >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
-
+	# Sites with traffic in the last 60 seconds
 	echo -e "######## Sites with traffic in the last 60 seconds: ########\n" >> $DIR/$FILE
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> $DIR/$FILE
-
 
 	# -- End:  WHM/cPanel Only by default (requires sar) ---
 
 
-
-	#mysql
+	# MySQL
 	echo -e "\n\nMySQL:------------------------------------------------------------\n\n" >> $DIR/$FILE
 	mysqladmin stat >> $DIR/$FILE
 	mysqladmin proc >> $DIR/$FILE
 
-	#apache
+	# Apache
 	echo -e "\n\nApache Full Status------------------------------------------------\n\n" >> $DIR/$FILE
 	/sbin/service httpd fullstatus >> $DIR/$FILE
 
-	#network
+	# Network
 	echo -e "\n\nNetwork------------------------------------------------------------\n\n" >> $DIR/$FILE
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
 	echo -e "\n\nNetwork 2----------------------------------------------------------\n\n" >> $DIR/$FILE
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
 
-	#email
+	# Email
 	echo -e "\n\nEmail------------------------------------------------------------\n\n" >> $DIR/$FILE
 	#EXIMQUEUE=`exim -bpc`
 	#echo "Exim Queue: $EXIMQUEUE " >> $DIR/$FILE 
 	/usr/sbin/exiwhat >> $DIR/$FILE
 
-	#process list
+	# Process List
 	echo -e "\n\nProcesses------------------------------------------------------------\n\n" >> $DIR/$FILE
 	ps auxf >> $DIR/$FILE
 
- 	#Email the notification + summary
-
+ 	# Email the notification + summary
     /bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
 
-
 fi
+
+# Clean up to remove files older than x days
+find $DIR/loadwatch.* -mtime +$REMOVE -exec rm {} \;
