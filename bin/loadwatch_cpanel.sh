@@ -183,7 +183,7 @@ then
 	ps auxf >> $DIR/$FILE
 
  	# Email the notification + summary
-    /bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
+	/bin/mail -s "$SUBJECT" "$EMAIL" < $DIR/$FILE
 
 fi
 
