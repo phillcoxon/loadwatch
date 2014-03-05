@@ -12,7 +12,7 @@ SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
 EMAILMESSAGE="/tmp/emailmessage.txt"
 
 # Delete when "X" days old
-REMOVE="5"
+REMOVE="30"
 
 # Notification Email Address
 EMAIL="root@localhost"
