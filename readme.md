@@ -8,9 +8,17 @@
 
 ### Install
 
-**Using git:**
+**Using git + our init script:**
 
 This is the fastest way to get up and running. Let us handle the installation for you!
+
+```
+cd /root; git clone https://github.com/getresults/loadwatch.git;
+cd loadwatch
+sh bin/loadwatch_cpanel.sh --init
+```
+
+**Using git:**
 
 ```
 cd /root
