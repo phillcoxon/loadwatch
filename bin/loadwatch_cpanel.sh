@@ -26,6 +26,9 @@ THRESH=4
 ################################# PLEASE DO NOT EDIT BELOW THIS LINE #################################
 ######################################################################################################
 
+# Other Variables
+FORCE=0
+
 # Useful functions to help with organization
 function usage
 {
@@ -65,7 +68,7 @@ done
 LOAD=`cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}'`
 
 # Trip (check whether or not to run it)
-if ([ $LOAD -ge "$THRESH" ] || [ $FORCE="1" ]);
+if ([ $LOAD -ge "$THRESH" ] || [ $FORCE = 1 ]);
 then
 
 	# Only log triggered loads. 
@@ -106,6 +109,7 @@ then
 	# Uptime
 	echo -e "\n######## Uptime: ########\n" >> $DIR/$FILE
 	uptime >> $DIR/$FILE
+	echo " " >> $DIR/$FILE
 
 	# Current Disk Usage
 	echo -e "######## Current Disk Usage (df -h): ########\n" >> $DIR/$FILE
