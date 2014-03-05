@@ -112,7 +112,7 @@ then
 	echo " " >> $DIR/$FILE
 
 	# Current Disk Usage
-	echo -e "######## Current Disk Usage (df -h): ########\n" >> $DIR/$FILE
+	echo -e "\n######## Current Disk Usage (df -h): ########\n" >> $DIR/$FILE
 	df -h >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
