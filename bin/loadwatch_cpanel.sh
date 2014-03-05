@@ -171,7 +171,6 @@ then
 
 	# MySQL Tuner
 	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------\n\n" >> $DIR/$FILE
-	echo $PERL MYSQL_TUNER
 	$PERL $MYSQL_TUNER >> $DIR/$FILE
 
 	# Apache
@@ -201,5 +200,3 @@ fi
 
 # Clean up to remove files older than x days
 find $DIR/loadwatch.* -mtime +$REMOVE -exec rm {} \;
-
-echo $DIR/$FILE
