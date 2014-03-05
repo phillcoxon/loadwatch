@@ -2,6 +2,11 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
+# get binaries and their paths
+PHP=`which php`
+PERL=`which perl`
+MYSQL=`which mysql`
+
 # Config
 FILE=loadwatch.`date +%F.%H.%M.%S`
 
@@ -20,6 +25,8 @@ EMAIL="root@localhost"
 # Load Threshold for doing a dump (4 is a good number to start with)
 THRESH=4
 
+# Option to include MySQL Tuner results
+MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
 
 
 ######################################################################################################
@@ -162,6 +169,10 @@ then
 	mysqladmin stat >> $DIR/$FILE
 	mysqladmin proc >> $DIR/$FILE
 
+	# MySQL Tuner
+	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------\n\n" >> $DIR/$FILE
+	$PERL MYSQL_TUNER >> $DIR/$FILE
+
 	# Apache
 	echo -e "\n\nApache Full Status------------------------------------------------\n\n" >> $DIR/$FILE
 	/sbin/service httpd fullstatus >> $DIR/$FILE
@@ -189,3 +200,5 @@ fi
 
 # Clean up to remove files older than x days
 find $DIR/loadwatch.* -mtime +$REMOVE -exec rm {} \;
+
+echo $DIR/$FILE
