@@ -207,7 +207,7 @@ then
 	#netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
 
 	echo -e "\n\nNetwork 3 (connection states) ----------------------\n\n" >> $DIR/$FILE
-	netstat -ant | awk '{print $6}' | sort | uniq -c | sort -n
+	netstat -ant | awk '{print $6}' | sort | uniq -c | sort -n >> $DIR/$FILE
 	
 	# Email
 	echo -e "\n\nEmail---------------------------------------------------------------\n\n" >> $DIR/$FILE
