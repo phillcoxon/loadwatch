@@ -231,4 +231,4 @@ then
 fi
 
 # Clean up to remove files older than x days
-find "$DIR/loadwatch.*" -mtime +$REMOVE -exec rm {} \;
+find "$DIR"/loadwatch.* -mtime +$REMOVE -exec rm {} \;
