@@ -3,7 +3,7 @@
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 DIRTEST="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo $DIRTEST;
+echo ll $DIRTEST/../;
 
 pwd;
 source `../config.sh`
