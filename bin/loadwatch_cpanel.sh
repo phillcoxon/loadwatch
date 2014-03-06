@@ -2,8 +2,8 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
+pwd;
 source ../config.sh
-pwd
 
 # Configure file name
 FILE=loadwatch.`date +%F.%H.%M.%S`
