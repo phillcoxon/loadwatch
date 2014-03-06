@@ -101,7 +101,7 @@ then
 	echo `date +%F.%X` - Load: $LOAD >> $DIR/checklog
         echo -e "Loadwatch Threshhold: $THRESH, Current Load: $LOAD" >> $DIR/$FILE
         
-        #log 
+    #log 
 	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> $DIR/checklog
 	echo -e "\nCurrent server time: " . `date +"%c"` >> $DIR/$FILE
 	echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > $EMAILMESSAGE
@@ -111,24 +111,36 @@ then
 
 	#summary
 	echo -e "\nSummary------------------------------------------------------------\n\n" >> $DIR/$FILE
-        NUMHTTPD=`ps aux|grep httpd|wc -l`
+    
+    UNAME_A=`uname -a`
+	echo "Generic Server Info: $UNAME_A" >> $DIR/$FILE
+
+    NUMHTTPD=`ps aux|grep httpd|wc -l`
 	echo "Number of HTTPD Processes: $NUMHTTPD" >> $DIR/$FILE
+	
 	HTTPDCPU=`ps aux|grep httpd|awk '{sum+=$3} END {print sum}'`
 	echo "HTTPD CPU consumption: $HTTPDCPU %" >> $DIR/$FILE 
+	
 	HTTPDMEM=`ps aux|grep httpd|awk '{sum+=$6} END {print sum}'`
 	HTTPDMEMMEG=$((HTTPDMEM/1024))
 	echo "HTTPD memory consumption: $HTTPDMEM Kilobytes ($HTTPDMEMMEG Megabytes)" >> $DIR/$FILE
+	
 	NUMPROCS=`grep -c processor /proc/cpuinfo`
 	echo "Number of CPU Cores: $NUMPROCS" >> $DIR/$FILE
+	
 	NUMPHP=`ps aux|grep php|wc -l`
 	echo "Number of PHP Processes: $NUMPHP" >> $DIR/$FILE
+	
 	PHPCPU=`ps aux|grep php|awk '{sum+=$3} END {print sum}'`
 	echo "PHP CPU consumption: $PHPCPU %" >> $DIR/$FILE
+	
 	PHPMEM=`ps aux|grep php|awk '{sum+=$6} END {print sum}'`
 	PHPMEMMEG=$((PHPMEM/1024))
 	echo "PHP memory consumption: $PHPMEM Kilobytes ($PHPMEMMEG Megabytes)" >> $DIR/$FILE
+	
 	MYSQLCPU=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $9'}`
 	echo "MYSQL CPU consumption: $MYSQLCPU %" >> $DIR/$FILE
+	
 	MYSQLMEM=`top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'}`
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> $DIR/$FILE
 
