@@ -175,6 +175,11 @@ then
 	sar -d >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
+	# Real time Disk I/O and processes
+	echo -e "######## Real time Disk I/O and processes (iotop -n 1 -b): ########" . "\n" >> "$DIR/$FILE"
+	iotop -n 1 -b >> "$DIR/$FILE"
+	echo " " >> "$DIR/$FILE"
+
 	# Sites with traffic in the last 60 seconds
 	echo -e "######## Sites with traffic in the last 60 seconds: ########" . "\n" >> "$DIR/$FILE"
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> "$DIR/$FILE"
