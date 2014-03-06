@@ -66,9 +66,10 @@ then
 
 	echo "Setting things up...";
 
-	echo "Copy our config file to something usable..."; cp -p sample.config.sh config.sh;
+	# echo "Copy our config file to something usable..."; cp -p sample.config.sh config.sh;
 	echo "Going into loadwatch bin directory..."; cd $DIR/bin;
 	echo "Copying cPanel script to safe, usable, file..."; cp $DIR/bin/loadwatch_cpanel.sh $DIR/bin/loadwatch.sh;
+	echo "Setting permissions on config file..."; chmod u+x $DIR/config.sh;
 	echo "Setting permissions on Loadwatch script..."; chmod u+x $DIR/bin/loadwatch.sh;
 	echo "Setting permissions on MySQL Tuner script..."; chmod u+x $DIR/bin/thirdparty/mysqltuner.pl;
 	echo "Going back to the loadwatch directory..."; cd $DIR;
