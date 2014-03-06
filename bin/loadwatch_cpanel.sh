@@ -175,6 +175,11 @@ then
 	sar -d >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
+	# Iostat – Input/Output Statistics
+	echo -e "######## Iostat – Input/Output Statistics (iostat): ########" . "\n" >> "$DIR/$FILE"
+	iostat >> "$DIR/$FILE"
+	echo " " >> "$DIR/$FILE"
+
 	# Real time Disk I/O and processes
 	echo -e "######## Real time Disk I/O and processes (iotop -n 1 -b): ########" . "\n" >> "$DIR/$FILE"
 	iotop -n 1 -b >> "$DIR/$FILE"
