@@ -5,8 +5,6 @@
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPTDIR/../config.sh;
 
-exit
-
 # Configure file name
 FILE=loadwatch.`date +%F.%H.%M.%S`
 
