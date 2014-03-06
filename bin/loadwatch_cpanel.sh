@@ -97,10 +97,10 @@ then
 	#/bin/mail -s "$SUBJECT" "$EMAIL" < $EMAILMESSAGE
 
 	#summary
-	echo -e "\nSummary------------------------------------------------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n" . "Summary------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
     
     UNAME_A=$(uname -a)
-	echo -e "Generic Server Info:\n$UNAME_A\n" >> "$DIR/$FILE"
+	echo -e "Generic Server Info:" . "\n" . "$UNAME_A" . "\n" >> "$DIR/$FILE"
 
     NUMHTTPD=$(ps aux|grep httpd|wc -l)
 	echo "Number of HTTPD Processes: $NUMHTTPD" >> "$DIR/$FILE"
@@ -132,27 +132,27 @@ then
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> "$DIR/$FILE"
 
 	# Uptime
-	echo -e "\n######## Uptime: ########\n" >> "$DIR/$FILE"
+	echo -e "\n" . "######## Uptime: ########" . "\n" >> "$DIR/$FILE"
 	uptime >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# Current Disk Usage
-	echo -e "\n######## Current Disk Usage (df -h): ########\n" >> "$DIR/$FILE"
+	echo -e "\n" . "######## Current Disk Usage (df -h): ########" . "\n" >> "$DIR/$FILE"
 	df -h >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# Free Memory (Mb)
-	echo -e "\n######## Free Memory (Mb): ########\n" >> "$DIR/$FILE"
+	echo -e "\n" . "######## Free Memory (Mb): ########" . "\n" >> "$DIR/$FILE"
 	free -h >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# CPU top 20
-	echo -e '\n######## CPU top 20 ########\n' >> "$DIR/$FILE"
+	echo -e "\n" . "######## CPU top 20 ########" . "\n" >> "$DIR/$FILE"
         top -bcn1 | head -n 26 >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# Memory top 20
-	echo -e '\n######## Mem top 20 ########\n' >> "$DIR/$FILE"
+	echo -e "\n" . "######## Mem top 20 ########" . "\n" >> "$DIR/$FILE"
         top -bmcn1 | head -n 26 >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
@@ -160,70 +160,69 @@ then
 
 
 	# Historical CPU Usage
-	echo -e "######## Historical CPU Usage (sar -p): ########\n" >> "$DIR/$FILE"
+	echo -e "######## Historical CPU Usage (sar -p): ########" . "\n" >> "$DIR/$FILE"
 	sar -p >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# Historical Memory Usage
 	# Note - should be -S on newer versions of sar.  At the moment WHM/cPanel seems to be running sar V9.0.4
-	echo -e "######## Historical Memory Usage (sar -r): ########\n" >> "$DIR/$FILE"
+	echo -e "######## Historical Memory Usage (sar -r): ########" . "\n" >> "$DIR/$FILE"
 	sar -r >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# Historical Disk IO
-	echo -e "######## Historical Disk I/O Usage (sar -d): ########\n" >> "$DIR/$FILE"
+	echo -e "######## Historical Disk I/O Usage (sar -d): ########" . "\n" >> "$DIR/$FILE"
 	sar -d >> "$DIR/$FILE"
 	echo " " >> "$DIR/$FILE"
 
 	# Sites with traffic in the last 60 seconds
-	echo -e "######## Sites with traffic in the last 60 seconds: ########\n" >> "$DIR/$FILE"
+	echo -e "######## Sites with traffic in the last 60 seconds: ########" . "\n" >> "$DIR/$FILE"
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> "$DIR/$FILE"
 
 	# -- End:  WHM/cPanel Only by default (requires sar) ---
 
 
 	# MySQL
-	echo -e "\n\nMySQL:------------------------------------------------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "MySQL:------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
 	mysqladmin stat >> "$DIR/$FILE"
 	mysqladmin proc >> "$DIR/$FILE"
 
 	# MySQL Tuner
-	echo -e "\n\nMySQL Tuner Output:------------------------------------------------------------" >> "$DIR/$FILE"
+	echo -e "\n\n" . "MySQL Tuner Output:------------------------------------------------------------" >> "$DIR/$FILE"
 	$PERL "$MYSQL_TUNER" >> "$DIR/$FILE"
 
 	# Apache
-	echo -e "\n\nApache Full Status------------------------------------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Apache Full Status------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
 	/sbin/service httpd fullstatus >> "$DIR/$FILE"
 
 	# Network
-	echo -e "\n\nNumber of HTTP connections by connecting ip address -----\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Number of HTTP connections by connecting ip address -----" . "\n\n" >> "$DIR/$FILE"
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
 	
-	echo -e "\n\nTotal number of HTTP connections ----------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Total number of HTTP connections ----------------------" . "\n\n" >> "$DIR/$FILE"
 	netstat -an | grep :80 | wc -l >> "$DIR/$FILE"
 
 	# check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
 	#netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
 
-	echo -e "\n\nNetwork Connection States ----------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Network Connection States ----------------------" . "\n\n" >> "$DIR/$FILE"
 	netstat -ant | awk '{print $6}' | sort | uniq -c | sort -n >> "$DIR/$FILE"
 
-	echo -e "\n\nStatistics for All Ports ----------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Statistics for All Ports ----------------------" . "\n\n" >> "$DIR/$FILE"
 	netstat -s >> "$DIR/$FILE"
 	
-
-	echo -e "\n\nifconfig (ethernet setup) -----\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "ifconfig (ethernet setup) -----" . "\n\n" >> "$DIR/$FILE"
 	ifconfig >> "$DIR/$FILE"
 	
 	
 	# Email
-	echo -e "\n\nEmail---------------------------------------------------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Email---------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
 	#EXIMQUEUE=`exim -bpc`
 	#echo "Exim Queue: $EXIMQUEUE " >> "$DIR/$FILE" 
 	/usr/sbin/exiwhat >> "$DIR/$FILE"
 
 	# Process List
-	echo -e "\n\nProcesses------------------------------------------------------------\n\n" >> "$DIR/$FILE"
+	echo -e "\n\n" . "Processes------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
 	ps auxf >> "$DIR/$FILE"
 
  	# Email the notification + summary
