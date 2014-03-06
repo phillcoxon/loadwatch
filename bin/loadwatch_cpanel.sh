@@ -197,13 +197,15 @@ then
 	/sbin/service httpd fullstatus >> $DIR/$FILE
 
 	# Network
-	echo -e "\n\nNetwork------------------------------------------------------------\n\n" >> $DIR/$FILE
+	echo -e "\n\nNetwork (number of HTTP connections by connecting ip address) -----\n\n" >> $DIR/$FILE
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
-	echo -e "\n\nNetwork 2----------------------------------------------------------\n\n" >> $DIR/$FILE
+	echo -e "\n\nNetwork 2 (total number of HTTP connections) ----------------------\n\n" >> $DIR/$FILE
+
+	# check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
 
 	# Email
-	echo -e "\n\nEmail------------------------------------------------------------\n\n" >> $DIR/$FILE
+	echo -e "\n\nEmail---------------------------------------------------------------\n\n" >> $DIR/$FILE
 	#EXIMQUEUE=`exim -bpc`
 	#echo "Exim Queue: $EXIMQUEUE " >> $DIR/$FILE 
 	/usr/sbin/exiwhat >> $DIR/$FILE
