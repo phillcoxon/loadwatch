@@ -224,12 +224,32 @@ then
 	echo -e "\n\n" . "ifconfig (ethernet setup) -----" . "\n\n" >> "$DIR/$FILE"
 	ifconfig >> "$DIR/$FILE"
 	
+	# Socket Information
+	echo -e "\n\n" . "Socket Information -----" . "\n\n" >> "$DIR/$FILE"
+	ss -s >> "$DIR/$FILE"
+
+	# Network Interface Statistics
+	echo -e "\n\n" . "Network Interface Statistics -----" . "\n\n" >> "$DIR/$FILE"
+	ip -s link >> "$DIR/$FILE"
+
 	
 	# Email
 	echo -e "\n\n" . "Email---------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
 	#EXIMQUEUE=`exim -bpc`
 	#echo "Exim Queue: $EXIMQUEUE " >> "$DIR/$FILE" 
 	/usr/sbin/exiwhat >> "$DIR/$FILE"
+
+		# Count of the messages in the queue
+		echo -e "\n\n" . "Count of the messages in the queue -----" . "\n\n" >> "$DIR/$FILE"
+		exim -bpc >> "$DIR/$FILE"
+
+		# Summary of messages in the queue (count, volume, oldest, newest, domain, and totals)
+		echo -e "\n\n" . "Summary of messages in the queue -----" . "\n\n" >> "$DIR/$FILE"
+		exim -bp | exiqsumm >> "$DIR/$FILE"
+		
+		# Exim's configuration settings
+		echo -e "\n\n" . "Exim's configuration settings -----" . "\n\n" >> "$DIR/$FILE"
+		exim -bP >> "$DIR/$FILE"
 
 	# Process List
 	echo -e "\n\n" . "Processes------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
