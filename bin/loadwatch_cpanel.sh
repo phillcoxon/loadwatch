@@ -145,7 +145,7 @@ then
 
 	# Free Memory (Mb)
 	echo -e "\n######## Free Memory (Mb): ########\n" >> $DIR/$FILE
-	free -m >> $DIR/$FILE
+	free -h >> $DIR/$FILE
 	echo " " >> $DIR/$FILE
 
 	# CPU top 20
@@ -198,17 +198,25 @@ then
 	/sbin/service httpd fullstatus >> $DIR/$FILE
 
 	# Network
-	echo -e "\n\nNetwork (number of HTTP connections by connecting ip address) -----\n\n" >> $DIR/$FILE
+	echo -e "\n\nNumber of HTTP connections by connecting ip address -----\n\n" >> $DIR/$FILE
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
 	
-	echo -e "\n\nNetwork 2 (total number of HTTP connections) ----------------------\n\n" >> $DIR/$FILE
+	echo -e "\n\nTotal number of HTTP connections ----------------------\n\n" >> $DIR/$FILE
 	netstat -an | grep :80 | wc -l >> $DIR/$FILE
 
 	# check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
 	#netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
 
-	echo -e "\n\nNetwork 3 (connection states) ----------------------\n\n" >> $DIR/$FILE
+	echo -e "\n\nNetwork Connection States ----------------------\n\n" >> $DIR/$FILE
 	netstat -ant | awk '{print $6}' | sort | uniq -c | sort -n >> $DIR/$FILE
+
+	echo -e "\n\nStatistics for All Ports ----------------------\n\n" >> $DIR/$FILE
+	netstat -s >> $DIR/$FILE
+	
+
+	echo -e "\n\nifconfig (ethernet setup) -----\n\n" >> $DIR/$FILE
+	ifconfig >> $DIR/$FILE
+	
 	
 	# Email
 	echo -e "\n\nEmail---------------------------------------------------------------\n\n" >> $DIR/$FILE
