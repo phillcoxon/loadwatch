@@ -199,9 +199,9 @@ then
 	# Network
 	echo -e "\n\nNetwork (number of HTTP connections by connecting ip address) -----\n\n" >> $DIR/$FILE
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
+	
 	echo -e "\n\nNetwork 2 (total number of HTTP connections) ----------------------\n\n" >> $DIR/$FILE
-
-	netstat -an | grep :80 | wc -l
+	netstat -an | grep :80 | wc -l >> $DIR/$FILE
 
 	# check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
 	#netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> $DIR/$FILE
