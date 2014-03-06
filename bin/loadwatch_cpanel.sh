@@ -3,15 +3,13 @@
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $SCRIPTDIR/../config.sh;
+source "$SCRIPTDIR/../config.sh";
 
 # Configure file name
-FILE=loadwatch.`date +%F.%H.%M.%S`
+FILE=loadwatch.$(date +%F.%H.%M.%S)
 
-# get binaries and their paths
-PHP=`which php`
-PERL=`which perl`
-MYSQL=`which mysql`
+# Get needed binaries and their paths
+PERL=$(which perl)
 
 ######################################################################################################
 ################################# PLEASE DO NOT EDIT BELOW THIS LINE #################################
