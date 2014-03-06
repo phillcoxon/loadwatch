@@ -2,11 +2,8 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
-DIRTEST="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo ll $DIRTEST/../;
-
-pwd;
-source `../config.sh`
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source `$SCRIPTDIR/../config.sh`
 
 exit
 
