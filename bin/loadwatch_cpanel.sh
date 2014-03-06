@@ -3,7 +3,9 @@
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 pwd;
-source config.sh
+source `../config.sh`
+
+exit
 
 # Configure file name
 FILE=loadwatch.`date +%F.%H.%M.%S`
