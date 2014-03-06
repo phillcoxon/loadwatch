@@ -3,7 +3,7 @@
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source `$SCRIPTDIR/../config.sh`
+source $SCRIPTDIR/../config.sh;
 
 exit
 
