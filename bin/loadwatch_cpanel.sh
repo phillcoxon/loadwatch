@@ -2,32 +2,16 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
+source ../config.sh
+pwd
+
+# Configure file name
+FILE=loadwatch.`date +%F.%H.%M.%S`
+
 # get binaries and their paths
 PHP=`which php`
 PERL=`which perl`
 MYSQL=`which mysql`
-
-# Config
-FILE=loadwatch.`date +%F.%H.%M.%S`
-
-# Loadwatch log directory
-DIR=/root/loadwatch
-COLUMNS=512
-SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
-EMAILMESSAGE="/tmp/emailmessage.txt"
-
-# Delete when "X" days old
-REMOVE="30"
-
-# Notification Email Address
-EMAIL="root@localhost"
-
-# Load Threshold for doing a dump (4 is a good number to start with)
-THRESH=4
-
-# Option to include MySQL Tuner results
-MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
-
 
 ######################################################################################################
 ################################# PLEASE DO NOT EDIT BELOW THIS LINE #################################
@@ -35,6 +19,9 @@ MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
 
 # Other Variables
 FORCE=0
+
+# Include MySQL Tuner results
+MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
 
 # Useful functions to help with organization
 function usage
@@ -79,7 +66,8 @@ then
 
 	echo "Setting things up...";
 
-	echo "Going into loadwatch directory..."; cd $DIR/bin;
+	echo "Copy our config file to something usable..."; cp -p sample.config.sh config.sh;
+	echo "Going into loadwatch bin directory..."; cd $DIR/bin;
 	echo "Copying cPanel script to safe, usable, file..."; cp $DIR/bin/loadwatch_cpanel.sh $DIR/bin/loadwatch.sh;
 	echo "Setting permissions on Loadwatch script..."; chmod u+x $DIR/bin/loadwatch.sh;
 	echo "Setting permissions on MySQL Tuner script..."; chmod u+x $DIR/bin/thirdparty/mysqltuner.pl;
