@@ -102,7 +102,7 @@ then
 	echo -e "\nSummary------------------------------------------------------------\n\n" >> $DIR/$FILE
     
     UNAME_A=`uname -a`
-	echo "Generic Server Info: $UNAME_A" >> $DIR/$FILE
+	echo "Generic Server Info:\n$UNAME_A\n" >> $DIR/$FILE
 
     NUMHTTPD=`ps aux|grep httpd|wc -l`
 	echo "Number of HTTPD Processes: $NUMHTTPD" >> $DIR/$FILE
