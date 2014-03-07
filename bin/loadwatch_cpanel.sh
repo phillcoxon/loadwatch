@@ -2,8 +2,15 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
+# Make sure this script isn't already running (we wouldn't want that!)
+if [[ "`pidof -x $(basename $0) -o %PPID`" ]]; then exit; fi
+
+# Include our config file if it exists
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "$SCRIPTDIR/../config.sh";
+if [ -f "$SCRIPTDIR/../config.sh" ]; then
+	echo "File found! Loading config..."
+	source "$SCRIPTDIR/../config.sh";
+fi
 
 # Configure file name
 FILE=loadwatch.$(date +%F.%H.%M.%S)
