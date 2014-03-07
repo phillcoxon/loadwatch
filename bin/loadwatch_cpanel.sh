@@ -140,7 +140,8 @@ then
 	echo "MYSQL CPU consumption: $MYSQLCPU %" >> "$DIR/$FILE"
 	
 	MYSQLMEM=$(top -n 1 -S -b -U mysql|tail -n 2|head -n 1|awk {'print $6'})
-	echo "MYSQL RAM consumption: $MYSQLMEM \n" >> "$DIR/$FILE"
+	echo "MYSQL RAM consumption: $MYSQLMEM" >> "$DIR/$FILE"
+	echo -e "\n" >> "$DIR/$FILE"
 
 	# Uptime
 	echo -e "######## Uptime: ######## \n" >> "$DIR/$FILE"
