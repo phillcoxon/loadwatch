@@ -15,7 +15,7 @@ fi
 # Do not let the script proceed if they are missing something essential !!
 
 	# get those path vars
-	PATHS=$(set | grep ^PATH_*)
+	PATHS=$(set | grep PATH_*)
 
 	echo "Array items:"
 	for path in ${PATHS[*]}
