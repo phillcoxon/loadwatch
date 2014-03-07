@@ -13,21 +13,28 @@ fi
 
 # Verify we can find binaries to use at paths specified in configuration
 # Do not let the script proceed if they are missing something essential !!
-	
-# get those path vars
-paths=$(set | grep ^_path_*)
 
-echo "Array items:"
-for item in ${paths[*]}
-do
-    printf "   %s\n" $item
-done
+	# Common paths
+	_path_cp="/bin/cp"
+	_path_mv="/bin/mv"
+	_path_ps="/bin/ps"
+	_path_grep="/bin/grep"
+	_path_fake="/bin/fake"
 
-# verify those paths
-for p in $paths
-do
-	type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
-done
+	# get those path vars
+	paths=$(set | grep ^_path_*)
+
+	echo "Array items:"
+	for item in ${paths[*]}
+	do
+	    printf "   %s\n" $item
+	done
+
+	# verify those paths
+	for p in $paths
+	do
+		type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
+	done
 
 # Configure file name
 FILE=loadwatch.$(date +%F.%H.%M.%S)
