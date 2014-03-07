@@ -8,7 +8,6 @@ if [[ "`pidof -x $(basename $0) -o %PPID`" ]]; then exit; fi
 # Include our config file if it exists
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -f "$SCRIPTDIR/../config.sh" ]; then
-	echo "File found! Loading config..."
 	source "$SCRIPTDIR/../config.sh";
 fi
 
