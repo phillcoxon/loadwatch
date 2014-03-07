@@ -98,15 +98,16 @@ then
 	echo "$(date +%F.%X) - Load: $LOAD" >> "$DIR/checklog"
         echo -e "Loadwatch Threshhold: $THRESH, Current Load: $LOAD" >> "$DIR/$FILE"
         
-    #log 
+    # Log our actions 
 	echo -e "Loadwatch tripped, dumping info to $DIR/$FILE \n" >> "$DIR/checklog"
 	echo -e "\nCurrent server time: " . "$(date +"%c")" >> "$DIR/$FILE"
 	echo "LoadWatch on $HOSTNAME triggered. Please Check it out." > "$EMAILMESSAGE"
 
-	#email (optional, set email address to customer and uncomment below lines)
-	#/bin/mail -s "$SUBJECT" "$EMAIL" < $EMAILMESSAGE
+	# not exactly sure what this is...pending deletion !!
+	# email (optional, set email address to customer and uncomment below lines)
+	# /bin/mail -s "$SUBJECT" "$EMAIL" < $EMAILMESSAGE
 
-	#summary
+	# Summary
 	echo -e "\n" . "Summary------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
     
     UNAME_A=$(uname -a)
@@ -222,8 +223,8 @@ then
 	echo -e "\n\n" . "Total number of HTTP connections ----------------------" . "\n\n" >> "$DIR/$FILE"
 	netstat -an | grep :80 | wc -l >> "$DIR/$FILE"
 
-	# check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
-	#netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
+	# Check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
+	# netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
 
 	echo -e "\n\n" . "Network Connection States ----------------------" . "\n\n" >> "$DIR/$FILE"
 	netstat -ant | awk '{print $6}' | sort | uniq -c | sort -n >> "$DIR/$FILE"
@@ -245,9 +246,10 @@ then
 	
 	# Email
 	echo -e "\n\n" . "Email---------------------------------------------------------------" . "\n\n" >> "$DIR/$FILE"
-	#EXIMQUEUE=`exim -bpc`
-	#echo "Exim Queue: $EXIMQUEUE " >> "$DIR/$FILE" 
-	/usr/sbin/exiwhat >> "$DIR/$FILE"
+	
+		# EXIMQUEUE=`exim -bpc`
+		# echo "Exim Queue: $EXIMQUEUE " >> "$DIR/$FILE" 
+		/usr/sbin/exiwhat >> "$DIR/$FILE"
 
 		# Count of the messages in the queue
 		echo -e "\n\n" . "Count of the messages in the queue -----" . "\n\n" >> "$DIR/$FILE"
