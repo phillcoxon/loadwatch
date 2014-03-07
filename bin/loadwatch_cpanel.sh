@@ -72,7 +72,7 @@ then
 
 	# If config.sh doesn't exist yet, let's create it!
 	if [ ! -f "$SCRIPTDIR/../config.sh" ]; then
-		echo "Copy our config file to something usable..."; cp -p "$SCRIPTDIR/../sample.config.sh" "$SCRIPTDIR/../config.sh"
+		echo "Copy our config file to something usable..."; cp -p "$SCRIPTDIR"/../sample.config.sh "$SCRIPTDIR"/../config.sh
 	fi
 	
 	echo "Going into loadwatch bin directory..."; cd "$DIR/bin";
