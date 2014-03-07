@@ -33,7 +33,7 @@ function usage
     echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force]  [--init] [-h | --help]"
 }
 
-# get parameters so we can tailor use of the script on the fly without editing
+# Get parameters so we can tailor use of the script on the fly without editing
 while [ "$1" != "" ]; do
     case $1 in
         -d | --dir )            shift
