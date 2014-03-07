@@ -15,11 +15,11 @@ fi
 # Do not let the script proceed if they are missing something essential !!
 	
 	# Get the path vars
-	PATHS=$(set | grep ^PATH_*)
-	echo $PATHS;
+	paths=$(set | grep ^_path_*)
+	echo $paths
 
 	# Verify those paths
-	for p in $PATHS
+	for p in $paths
 	do
 		type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
 	done
