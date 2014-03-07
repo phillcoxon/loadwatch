@@ -6,6 +6,13 @@
 ######################################### BASIC CONFIG FILE ##########################################
 ######################################################################################################
 
+# Common paths
+PATH_cp="/bin/cp"
+PATH_mv="/bin/mv"
+PATH_ps="/bin/ps"
+PATH_grep="/bin/grep"
+PATH_fake="/bin/fake"
+
 # Loadwatch log directory
 DIR=/root/loadwatch
 COLUMNS=512
