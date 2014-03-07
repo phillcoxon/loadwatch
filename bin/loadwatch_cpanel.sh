@@ -3,7 +3,8 @@
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 # Make sure this script isn't already running (we wouldn't want that!)
-if [[ "`pidof -x $(basename $0) -o %PPID`" ]]; then exit; fi
+if [[ "$(pidof -x "$(basename $0)" -o %PPID)" ]]; then exit; fi
+echo $(basename $0);
 
 # Include our config file if it exists
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -70,7 +71,11 @@ then
 
 	echo "Setting things up...";
 
-	# echo "Copy our config file to something usable..."; cp -p sample.config.sh config.sh;
+	# If config.sh doesn't exist yet, let's create it!
+	if [ ! -f "$SCRIPTDIR/../config.sh" ]; then
+		echo "Copy our config file to something usable..."; cp -p "$SCRIPTDIR/../sample.config.sh" "$SCRIPTDIR/../config.sh"
+	fi
+	
 	echo "Going into loadwatch bin directory..."; cd "$DIR/bin";
 	echo "Copying cPanel script to safe, usable, file..."; cp "$DIR/bin/loadwatch_cpanel.sh $DIR/bin/loadwatch.sh";
 	echo "Setting permissions on config file..."; chmod u+x "$DIR/config.sh";
