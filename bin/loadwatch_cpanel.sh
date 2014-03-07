@@ -155,7 +155,7 @@ then
 	# Free Memory (Mb)
 	echo -e "######## Free Memory (Mb): ######## \n" >> "$DIR/$FILE"
 	free -k >> "$DIR/$FILE"
-	echo "\n" >> "$DIR/$FILE"
+	echo -e "\n" >> "$DIR/$FILE"
 
 	# CPU top 20
 	echo -e "######## CPU top 20 ######## \n" >> "$DIR/$FILE"
