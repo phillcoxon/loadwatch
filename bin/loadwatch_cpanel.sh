@@ -17,7 +17,6 @@ fi
 	# get those path vars
 	paths=$(set | grep ^_path_*)
 
-	echo "Array items:"
 	for item in ${paths[*]}
 	do
 	    printf "   %s\n" $item
