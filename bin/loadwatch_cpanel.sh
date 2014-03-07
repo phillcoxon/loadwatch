@@ -145,22 +145,22 @@ then
 	# Uptime
 	echo -e "######## Uptime: ######## \n" >> "$DIR/$FILE"
 	uptime >> "$DIR/$FILE"
-	echo " \n" >> "$DIR/$FILE"
+	echo "\n" >> "$DIR/$FILE"
 
 	# Current Disk Usage
 	echo -e "######## Current Disk Usage (df -h): ######## \n" >> "$DIR/$FILE"
 	df -h >> "$DIR/$FILE"
-	echo " \n" >> "$DIR/$FILE"
+	echo "\n" >> "$DIR/$FILE"
 
 	# Free Memory (Mb)
 	echo -e "######## Free Memory (Mb): ######## \n" >> "$DIR/$FILE"
 	free -k >> "$DIR/$FILE"
-	echo " \n" >> "$DIR/$FILE"
+	echo "\n" >> "$DIR/$FILE"
 
 	# CPU top 20
 	echo -e "######## CPU top 20 ######## \n" >> "$DIR/$FILE"
         top -bcn1 | head -n 26 >> "$DIR/$FILE"
-	echo " \n" >> "$DIR/$FILE"
+	echo "\n" >> "$DIR/$FILE"
 
 	# Memory top 20
 	echo -e "######## Mem top 20 ######## \n" >> "$DIR/$FILE"
@@ -199,7 +199,7 @@ then
 	# Sites with traffic in the last 60 seconds
 	echo -e "######## Sites with traffic in the last 60 seconds: ######## \n" >> "$DIR/$FILE"
 	find /usr/local/apache/domlogs/ -maxdepth 1 -type f -mmin -1 | egrep -v 'offset|_log$' >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	# -- End:  WHM/cPanel Only by default (requires sar) ---
 
@@ -209,51 +209,51 @@ then
 	echo -e "MySQL:------------------------------------------------------------ \n\n" >> "$DIR/$FILE"
 	mysqladmin stat >> "$DIR/$FILE"
 	mysqladmin proc >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	# MySQL Tuner
 	echo -e "MySQL Tuner Output:------------------------------------------------------------ \n\n" >> "$DIR/$FILE"
 	$PERL "$MYSQL_TUNER" >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	# Apache
 	echo -e "Apache Full Status------------------------------------------------ \n\n" >> "$DIR/$FILE"
 	/sbin/service httpd fullstatus >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	# Network
 	echo -e "Number of HTTP connections by connecting ip address ----- \n\n" >> "$DIR/$FILE"
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 	
 	echo -e "Total number of HTTP connections ---------------------- \n\n" >> "$DIR/$FILE"
 	netstat -an | grep :80 | wc -l >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	# Check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
 	# netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f4 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
 
 	echo -e "Network Connection States ---------------------- \n\n" >> "$DIR/$FILE"
 	netstat -ant | awk '{print $6}' | sort | uniq -c | sort -n >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	echo -e "Statistics for All Ports ---------------------- \n\n" >> "$DIR/$FILE"
 	netstat -s >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 	
 	echo -e "ifconfig (ethernet setup) ----- \n\n" >> "$DIR/$FILE"
 	ifconfig >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 	
 	# Socket Information
 	echo -e "Socket Information ----- \n\n" >> "$DIR/$FILE"
 	ss -s >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	# Network Interface Statistics
 	echo -e "Network Interface Statistics ----- \n\n" >> "$DIR/$FILE"
 	ip -s link >> "$DIR/$FILE"
-	echo " \n\n" >> "$DIR/$FILE"
+	echo "\n\n" >> "$DIR/$FILE"
 
 	
 	# Email
@@ -262,22 +262,22 @@ then
 		# EXIMQUEUE=`exim -bpc`
 		# echo "Exim Queue: $EXIMQUEUE " >> "$DIR/$FILE" 
 		/usr/sbin/exiwhat >> "$DIR/$FILE"
-		echo " \n\n" >> "$DIR/$FILE"
+		echo "\n\n" >> "$DIR/$FILE"
 
 		# Count of the messages in the queue
 		echo -e "Count of the messages in the queue ----- \n\n" >> "$DIR/$FILE"
 		exim -bpc >> "$DIR/$FILE"
-		echo " \n\n" >> "$DIR/$FILE"
+		echo "\n\n" >> "$DIR/$FILE"
 
 		# Summary of messages in the queue (count, volume, oldest, newest, domain, and totals)
 		echo -e "Summary of messages in the queue ----- \n\n" >> "$DIR/$FILE"
 		exim -bp | exiqsumm >> "$DIR/$FILE"
-		echo " \n\n" >> "$DIR/$FILE"
+		echo "\n\n" >> "$DIR/$FILE"
 		
 		# Exim's configuration settings
 		echo -e "Exim's configuration settings ----- \n\n" >> "$DIR/$FILE"
 		exim -bP >> "$DIR/$FILE"
-		echo " \n\n" >> "$DIR/$FILE"
+		echo "\n\n" >> "$DIR/$FILE"
 
 	# Process List
 	echo -e "Processes------------------------------------------------------------ \n\n" >> "$DIR/$FILE"
