@@ -14,15 +14,14 @@ fi
 # Verify we can find binaries to use at paths specified in configuration
 # Do not let the script proceed if they are missing something essential !!
 	
-	# Get the path vars
-	paths=$(set | grep ^_path_*)
-	echo $paths
-
-	# Verify those paths
-	for p in $paths
-	do
-		type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
-	done
+# get those path vars
+paths=$(set | grep ^_path_*)
+ 
+# verify those paths
+for p in $paths
+do
+	type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
+done
 
 # Configure file name
 FILE=loadwatch.$(date +%F.%H.%M.%S)
