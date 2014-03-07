@@ -15,16 +15,16 @@ fi
 # Do not let the script proceed if they are missing something essential !!
 
 	# get those path vars
-	PATHS=$(set | grep PATH_*)
+	paths=$(set | grep ^_path_*)
 
 	echo "Array items:"
-	for path in ${PATHS[*]}
+	for item in ${paths[*]}
 	do
-	    printf "   %s\n" $path
+	    printf "   %s\n" $item
 	done
 
 	# verify those paths
-	for p in $PATHS
+	for p in $paths
 	do
 		type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
 	done

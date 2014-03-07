@@ -7,11 +7,11 @@
 ######################################################################################################
 
 # Common paths
-PATH_cp="/bin/cp"
-PATH_mv="/bin/mv"
-PATH_ps="/bin/ps"
-PATH_grep="/bin/grep"
-PATH_fake="/bin/fake"
+_path_cp="/bin/cp"
+_path_mv="/bin/mv"
+_path_ps="/bin/ps"
+_path_grep="/bin/grep"
+_path_fake="/bin/fake"
 
 # Loadwatch log directory
 DIR=/root/loadwatch
