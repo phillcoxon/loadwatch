@@ -5,10 +5,43 @@
 # Make sure this script isn't already running (we wouldn't want that!)
 if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
 
+
+
 # Include our config file if it exists
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -f "$SCRIPTDIR/../config.sh" ]; then
 	source "$SCRIPTDIR/../config.sh";
+else
+
+# ***********************************************************
+# IMPORTANT:  We Recommend using a config.sh file on each server (see example in repo)
+# so that any improvements to the loadwatch script do not trash your custom settings. 
+#
+# The following settings are included as a default fall back if the config is missing
+
+# Common paths
+_path_cp="/bin/cp"
+_path_mv="/bin/mv"
+_path_ps="/bin/ps"
+_path_grep="/bin/grep"
+_path_fake="/bin/fake"
+
+# Loadwatch log directory
+DIR=/root/loadwatch
+COLUMNS=512
+SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
+EMAILMESSAGE="/tmp/emailmessage.txt"
+
+# Delete when "X" days old
+REMOVE="30"
+
+# Notification Email Address
+EMAIL="root@localhost"
+
+# Load Threshold for doing a dump (4 is a good number to start with)
+THRESH=4
+
+# ***********************************************************
 fi
 
 # Verify we can find binaries to use at paths specified in configuration
