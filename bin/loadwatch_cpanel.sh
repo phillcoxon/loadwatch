@@ -98,7 +98,7 @@ then
 	echo "Setting things up...";
 
 	# If config.sh doesn't exist yet, let's create it!
-	if [ ! -f "$SCRIPTDIR/../config.sh" ]; then
+	if [ ! -f "$DIR/config.sh" ]; then
 		echo "Copy our config file to something usable..."; cp -p "$DIR/sample.config.sh" "$DIR/config.sh";
 	fi
 	
