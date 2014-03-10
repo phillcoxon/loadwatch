@@ -45,12 +45,7 @@ PERL=$(which perl)
 
 	# Set $DIR for purposes of --init not failing, since we don't really know it yet
 	# Assumes default install location of `/root/loadwatch`. If Wanting a different location, dir should be set via flags
-	
-	if [ "$DIR" != "" ]; then
-		echo \$DIR is set
-		echo $DIR
-	else
-		echo \$DIR is not set
+	if [ "$DIR" == "" ]; then
 		DIR=/root/loadwatch
 	fi
 
