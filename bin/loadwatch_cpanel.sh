@@ -45,9 +45,11 @@ PERL=$(which perl)
 
 	# Set $DIR for purposes of --init not failing, since we don't really know it yet
 	# Assumes default install location of `/root/loadwatch`. If Wanting a different location, dir should be set via flags
+	echo $DIR
 	if [ ! -z $DIR ]; then
 		DIR=/root/loadwatch
 	fi
+	echo $DIR
 
 # Include MySQL Tuner results
 MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
@@ -97,7 +99,7 @@ then
 
 	# If config.sh doesn't exist yet, let's create it!
 	if [ ! -f "$SCRIPTDIR/../config.sh" ]; then
-		echo "Copy our config file to something usable..."; cp -p "$SCRIPTDIR/../sample.config.sh" "$SCRIPTDIR/../config.sh";
+		echo "Copy our config file to something usable..."; cp -p "$DIR/sample.config.sh" "$DIR/config.sh";
 	fi
 	
 	echo "Going into loadwatch bin directory..."; cd "$DIR/bin";
