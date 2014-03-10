@@ -39,7 +39,15 @@ PERL=$(which perl)
 ######################################################################################################
 
 # Other Variables
-FORCE=0
+	
+	# Default $FORCE to something so it's at least set
+	FORCE=0
+
+	# Set $DIR for purposes of --init not failing, since we don't really know it yet
+	# Assumes default install location of `/root/loadwatch`. If Wanting a different location, dir should be set via flags
+	if [ ! -z $DIR ]; then
+		DIR=/root/loadwatch
+	fi
 
 # Include MySQL Tuner results
 MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
@@ -101,7 +109,7 @@ then
 
 	echo "Okay. All done! :)";
 
-	exit
+	exit 1
 fi
 
 # Pull load average, log
