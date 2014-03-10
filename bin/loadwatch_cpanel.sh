@@ -110,7 +110,7 @@ then
 
 	echo "Okay. All done! :)";
 
-	exit 1
+	exit
 fi
 
 # Pull load average, log
