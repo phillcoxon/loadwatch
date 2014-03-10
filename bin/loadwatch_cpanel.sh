@@ -46,12 +46,14 @@ PERL=$(which perl)
 	# Set $DIR for purposes of --init not failing, since we don't really know it yet
 	# Assumes default install location of `/root/loadwatch`. If Wanting a different location, dir should be set via flags
 	
-	echo "Let's see if we can get whatever DIR is...";
-	echo "$DIR";
-	if [ ! -z $DIR ]; then
+	if [ "$DIR" != "" ]; then
+		echo \$DIR is set
+		echo $DIR
+	else
+		echo \$DIR is not set
 		DIR=/root/loadwatch
 	fi
-	echo "$DIR";
+
 
 # Include MySQL Tuner results
 MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
