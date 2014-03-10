@@ -9,6 +9,9 @@ if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -f "$SCRIPTDIR/../config.sh" ]; then
 	source "$SCRIPTDIR/../config.sh";
+else
+	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
+	exit;
 fi
 
 # Verify we can find binaries to use at paths specified in configuration
