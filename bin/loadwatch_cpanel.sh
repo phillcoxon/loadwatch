@@ -22,13 +22,13 @@ fi
 
 	for item in ${paths[*]}
 	do
-	    printf "   %s\n" $item
+	    # printf "   %s\n" $item
 	done
 
 	# verify those paths
 	for p in $paths
 	do
-		type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
+		# type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
 	done
 
 # Configure file name
