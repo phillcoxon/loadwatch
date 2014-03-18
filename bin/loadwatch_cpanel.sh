@@ -18,18 +18,18 @@ fi
 # Do not let the script proceed if they are missing something essential !!
 
 	# get those path vars
-	paths=$(set | grep ^_path_*)
-
-	for item in ${paths[*]}
-	do
-	    # printf "   %s\n" $item
-	done
-
+	# paths=$(set | grep ^_path_*)
+	# 
+	# for item in ${paths[*]}
+	# do
+	#     printf "   %s\n" $item
+	# done
+	# 
 	# verify those paths
-	for p in $paths
-	do
-		# type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
-	done
+	# for p in $paths
+	# do
+	# 	type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
+	# done
 
 # Configure file name
 FILE=loadwatch.$(date +%F.%H.%M.%S)
