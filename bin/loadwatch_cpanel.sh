@@ -11,24 +11,27 @@ if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -f "$SCRIPTDIR/../config.sh" ]; then
 	source "$SCRIPTDIR/../config.sh";
+else
+	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
+	exit;
 fi
 
 # Verify we can find binaries to use at paths specified in configuration
 # Do not let the script proceed if they are missing something essential !!
 
 	# get those path vars
-	paths=$(set | grep ^_path_*)
-
-	for item in ${paths[*]}
-	do
-	    printf "   %s\n" $item
-	done
-
+	# paths=$(set | grep ^_path_*)
+	# 
+	# for item in ${paths[*]}
+	# do
+	#     printf "   %s\n" $item
+	# done
+	# 
 	# verify those paths
-	for p in $paths
-	do
-		type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
-	done
+	# for p in $paths
+	# do
+	# 	type -P ${p##*=} &>/dev/null || { echo  "${p##*=} not found"; exit 1; }
+	# done
 
 # Configure file name
 FILE=loadwatch.$(date +%F.%H.%M.%S)
@@ -41,7 +44,16 @@ PERL=$(which perl)
 ######################################################################################################
 
 # Other Variables
-FORCE=0
+	
+	# Default $FORCE to something so it's at least set
+	FORCE=0
+
+	# Set $DIR for purposes of --init not failing, since we don't really know it yet
+	# Assumes default install location of `/root/loadwatch`. If Wanting a different location, dir should be set via flags
+	if [ "$DIR" == "" ]; then
+		DIR=/root/loadwatch
+	fi
+
 
 # Include MySQL Tuner results
 MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
@@ -90,8 +102,8 @@ then
 	echo "Setting things up...";
 
 	# If config.sh doesn't exist yet, let's create it!
-	if [ ! -f "$SCRIPTDIR/../config.sh" ]; then
-		echo "Copy our config file to something usable..."; cp -p "$SCRIPTDIR/../sample.config.sh" "$SCRIPTDIR/../config.sh";
+	if [ ! -f "$DIR/config.sh" ]; then
+		echo "Copy our config file to something usable..."; cp -p "$DIR/sample.config.sh" "$DIR/config.sh";
 	fi
 	
 	echo "Going into loadwatch bin directory..."; cd "$DIR/bin";
