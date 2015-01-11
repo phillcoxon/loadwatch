@@ -64,9 +64,6 @@ done
 # Need to pull before the config so we can include in the subject line 
 
 LOAD=$(cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}')
-echo " * Load = $LOAD, Threshold = $THRESH";
-
-
 
 # Grab the config file if there is one
 
@@ -83,6 +80,8 @@ then
     	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
         exit;
 fi
+
+echo " * Load = $LOAD, Threshold = $THRESH";
 
 
 # Verify we can find binaries to use at paths specified in configuration
