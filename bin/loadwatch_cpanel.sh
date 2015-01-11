@@ -60,6 +60,13 @@ while [ "$1" != "" ]; do
     shift
 done
 
+# Pull load average, log
+# Need to pull before the config so we can include in the subject line 
+
+LOAD=$(cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}')
+echo " * Load = $LOAD, Threshold = $THRESH";
+
+
 
 # Grab the config file if there is one
 
@@ -144,16 +151,11 @@ fi
 
 
 
-# Pull load average, log
-LOAD=$(cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}')
-
-echo " * Load = $LOAD, Threshold = $THRESH";
-
 # Trip (check whether or not to run it)
 if [[ $LOAD -ge $THRESH ]] || [[ $FORCE = 1 ]];
 then
 
-	echo "Load of $LOAD exceed threshold of $THRESH. Processing";
+	echo " * Load of $LOAD exceed threshold of $THRESH. Processing";
 
 	# Only log triggered loads. 
 	echo "$(date +%F.%X) - Load: $LOAD" >> "$DIR/checklog"
@@ -186,9 +188,11 @@ then
 	free -k >> "$DIR/$FILE"
 	echo -e "\n" >> "$DIR/$FILE"
 
-
+	# uname
+	echo -e "######## Server Info: ######## \n" >> "$DIR/$FILE"
+    
     UNAME_A=$(uname -a)
-	echo -e "######## Generic Server Info:\n$UNAME_A ########\n" >> "$DIR/$FILE"
+    echo -e "$UNAME_A \n" >> "$DIR/$FILE"
 
     NUMHTTPD=$(ps aux|grep httpd|wc -l)
 	echo "Number of HTTPD Processes: $NUMHTTPD" >> "$DIR/$FILE"
@@ -220,20 +224,15 @@ then
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> "$DIR/$FILE"
 	echo -e "\n" >> "$DIR/$FILE"
 
-
 	# Network
-	echo -e "Number of HTTP connections by connecting ip address ----- \n\n" >> "$DIR/$FILE"
+	echo -e "######## HTTP connections by ip address ######## \n" >> "$DIR/$FILE"
+	echo -e "Note: Usually a good place to look for bad traffic \n" >> "$DIR/$FILE"
 	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
 	echo -e "\n\n" >> "$DIR/$FILE"
 	
-	echo -e "Total number of HTTP connections ---------------------- \n\n" >> "$DIR/$FILE"
+	echo -e "######## Total num HTTP connections ########\n" >> "$DIR/$FILE"
 	netstat -an | grep :80 | wc -l >> "$DIR/$FILE"
-	echo -e "\n\n" >> "$DIR/$FILE"
-
-	# Check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
-
-
-
+	echo -e "\n" >> "$DIR/$FILE"
 
 	# CPU top 20
 	echo -e "######## CPU top 20 ######## \n" >> "$DIR/$FILE"
