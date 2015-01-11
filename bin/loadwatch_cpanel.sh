@@ -43,7 +43,7 @@ done
 
 # If we're not running --init and there's no config, error
 
-if [ -f "$SCRIPTDIR/../config.sh" ] && [ -z "$INIT"]; then
+if [ -f "$SCRIPTDIR/../config.sh" ] && [[ $INIT != 1 ]]; then
 	source "$SCRIPTDIR/../config.sh";
 else
 	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
