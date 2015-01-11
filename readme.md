@@ -48,10 +48,11 @@ Edit loadwatch.sh and set the LOAD level and EMAIL address you want to use for n
 
 For a single CPU server using '4' for the load level is fairly typical. 
 
+Set REMOVE for the number of days to retain logwatch highload reports.
 
 ### Set up Cron
 
-Next, edit your crontab and insert the entry below which will run loadwatch.sh every 20 minutes to check server load and generate a report of the load is over the set threshold.
+Next, edit your crontab and insert the entry below which will run loadwatch.sh every 2-5 minutes to check server load and generate a report of the load is over the set threshold. For example, we can set a crontab for every 3 minutes:
 
 ```
 crontab -e  
@@ -63,12 +64,13 @@ Make sure the loadwatch script is set to 700 permissions.
 
 ### Warning
 
-Log files are not deleted or trimmed currently and will continue growing over time.  
+Log files will be deleted every $REMOVE days as defined in the config file.  Be sure this is set or log files will continue to grow over time.  
 
 
 ### Acknowledgements
 
 * An awesome LiquidWeb.com staff member who gave me a copy of the base script.
+* Will Ashworth for a bunch of great contributions
 
 
 ### Disclaimer
@@ -77,6 +79,8 @@ Log files are not deleted or trimmed currently and will continue growing over ti
 
 ### Todo
 
+* Improve report layout
+* Provide some extra guidence / steps on how to use key info to spot & resolve high load causes.
 * Improve Ubuntu version to match 'sar' type reporting if possible.
 * Add nginx / typical ubuntu email agent debug info to loadwatch_ubuntu.sh
 * Look for ways to expand the script to provide more relevant info
