@@ -9,7 +9,41 @@ if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
 
 # Include our config file if it exists
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ -f "$SCRIPTDIR/../config.sh" ]; then
+
+# Get parameters so we can tailor use of the script on the fly without editing
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --dir )            shift
+                                DIR=$1
+                                ;;
+        -e | --email )          shift
+                                EMAIL=$1
+                                ;;
+        -f | --file )           shift
+                                FILE=$1
+                                ;;
+        -r | --remove )         shift
+                                REMOVE=$1
+                                ;;
+        -t | --threshold )      shift
+                                THRESH=$1
+                                ;;
+        --init )                INIT=1
+                                ;;
+        -x | --force )          FORCE=1
+                                ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+# If we're not running --init and there's no config, error
+
+if [ -f "$SCRIPTDIR/../config.sh" ] && [ -z "$INIT"]; then
 	source "$SCRIPTDIR/../config.sh";
 else
 	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
@@ -64,36 +98,7 @@ function usage
     echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force]  [--init] [-h | --help]"
 }
 
-# Get parameters so we can tailor use of the script on the fly without editing
-while [ "$1" != "" ]; do
-    case $1 in
-        -d | --dir )            shift
-                                DIR=$1
-                                ;;
-        -e | --email )          shift
-                                EMAIL=$1
-                                ;;
-        -f | --file )           shift
-                                FILE=$1
-                                ;;
-        -r | --remove )         shift
-                                REMOVE=$1
-                                ;;
-        -t | --threshold )      shift
-                                THRESH=$1
-                                ;;
-        --init )                INIT=1
-                                ;;
-        -x | --force )          FORCE=1
-                                ;;
-        -h | --help )           usage
-                                exit
-                                ;;
-        * )                     usage
-                                exit 1
-    esac
-    shift
-done
+
 
 # If INIT is triggered, we'll handle the basic setup for you
 if [[ $INIT = 1 ]];
