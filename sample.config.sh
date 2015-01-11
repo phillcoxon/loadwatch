@@ -1,5 +1,5 @@
 #!/bin/bash
-# Created by:	Liquid Web
+# Original Loadwatch script from :	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
 ######################################################################################################
@@ -16,7 +16,7 @@ _path_fake="/bin/fake"
 # Loadwatch log directory
 DIR=/root/loadwatch
 COLUMNS=512
-SUBJECT="Loadwatch notification for $HOSTNAME at ".`date +%F.%H.%M`
+SUBJECT="Loadwatch: Server load of $LOAD for $HOSTNAME at "`date +%F.%H.%M`
 EMAILMESSAGE="/tmp/emailmessage.txt"
 
 # Delete when "X" days old

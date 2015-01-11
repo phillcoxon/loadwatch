@@ -140,9 +140,25 @@ then
 
 	# Summary
 	echo -e "Summary------------------------------------------------------------ \n\n" >> "$DIR/$FILE"
-    
+   
+	# Uptime
+	echo -e "######## Uptime: ######## \n" >> "$DIR/$FILE"
+	uptime >> "$DIR/$FILE"
+	echo -e "\n" >> "$DIR/$FILE"
+
+	# Current Disk Usage
+	echo -e "######## Current Disk Usage (df -h): ######## \n" >> "$DIR/$FILE"
+	df -h >> "$DIR/$FILE"
+	echo -e "\n" >> "$DIR/$FILE"
+
+	# Free Memory (Mb)
+	echo -e "######## Free Memory (Mb): ######## \n" >> "$DIR/$FILE"
+	free -k >> "$DIR/$FILE"
+	echo -e "\n" >> "$DIR/$FILE"
+
+
     UNAME_A=$(uname -a)
-	echo -e "Generic Server Info:\n$UNAME_A\n" >> "$DIR/$FILE"
+	echo -e "######## Generic Server Info:\n$UNAME_A ########\n" >> "$DIR/$FILE"
 
     NUMHTTPD=$(ps aux|grep httpd|wc -l)
 	echo "Number of HTTPD Processes: $NUMHTTPD" >> "$DIR/$FILE"
@@ -174,20 +190,20 @@ then
 	echo "MYSQL RAM consumption: $MYSQLMEM" >> "$DIR/$FILE"
 	echo -e "\n" >> "$DIR/$FILE"
 
-	# Uptime
-	echo -e "######## Uptime: ######## \n" >> "$DIR/$FILE"
-	uptime >> "$DIR/$FILE"
-	echo -e "\n" >> "$DIR/$FILE"
 
-	# Current Disk Usage
-	echo -e "######## Current Disk Usage (df -h): ######## \n" >> "$DIR/$FILE"
-	df -h >> "$DIR/$FILE"
-	echo -e "\n" >> "$DIR/$FILE"
+	# Network
+	echo -e "Number of HTTP connections by connecting ip address ----- \n\n" >> "$DIR/$FILE"
+	netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head >> "$DIR/$FILE"
+	echo -e "\n\n" >> "$DIR/$FILE"
+	
+	echo -e "Total number of HTTP connections ---------------------- \n\n" >> "$DIR/$FILE"
+	netstat -an | grep :80 | wc -l >> "$DIR/$FILE"
+	echo -e "\n\n" >> "$DIR/$FILE"
 
-	# Free Memory (Mb)
-	echo -e "######## Free Memory (Mb): ######## \n" >> "$DIR/$FILE"
-	free -k >> "$DIR/$FILE"
-	echo -e "\n" >> "$DIR/$FILE"
+	# Check this line - not sure if it's correct as no field 4 for cut. Counting blank lines?
+
+
+
 
 	# CPU top 20
 	echo -e "######## CPU top 20 ######## \n" >> "$DIR/$FILE"
