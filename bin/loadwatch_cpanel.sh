@@ -41,14 +41,22 @@ while [ "$1" != "" ]; do
     shift
 done
 
-# If we're not running --init and there's no config, error
 
-if [ -f "$SCRIPTDIR/../config.sh" ] && [[ $INIT != 1 ]]; then
-	source "$SCRIPTDIR/../config.sh";
-else
-	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
-	exit;
+# Grab the config file if there is one
+
+if [ -f "$SCRIPTDIR/../config.sh" ]
+then
+    	source "$SCRIPTDIR/../config.sh";
 fi
+
+# If there isn't, let's error unless we're running init
+
+if [ ! -f "$SCRIPTDIR/../config.sh" ]  && [[ $INIT -ne 1 ]]
+then
+    	echo "No config file found. Please run 'loadwatch_cpanel.sh --init' to create your default configuration.";
+        exit;
+fi
+
 
 # Verify we can find binaries to use at paths specified in configuration
 # Do not let the script proceed if they are missing something essential !!
