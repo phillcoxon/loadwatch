@@ -19,27 +19,37 @@ function usage
 }
 
 
+# Default $FORCE to something so it's at least set
+FORCE=0
+
 # Get parameters so we can tailor use of the script on the fly without editing
 while [ "$1" != "" ]; do
     case $1 in
         -d | --dir )            shift
                                 DIR=$1
+                                echo "DIR = $1";
                                 ;;
         -e | --email )          shift
                                 EMAIL=$1
+                                echo "EMAIL = $1";
                                 ;;
         -f | --file )           shift
                                 FILE=$1
+                                echo "FILE = $1";
                                 ;;
         -r | --remove )         shift
                                 REMOVE=$1
+                                echo "REMOVE = $1";
                                 ;;
         -t | --threshold )      shift
                                 THRESH=$1
+                                echo "THRESH = $1";                                
                                 ;;
         --init )                INIT=1
+                                echo "INIT = $INIT";
                                 ;;
         -x | --force )          FORCE=1
+                                echo "FORCE = $FORCE";
                                 ;;
         -h | --help )           usage
                                 exit
@@ -55,7 +65,7 @@ done
 
 if [ -f "$SCRIPTDIR/../config.sh" ]
 then
-		echo "Found config file.";
+		echo " * Found config file.";
     	source "$SCRIPTDIR/../config.sh";
 fi
 
@@ -97,9 +107,6 @@ PERL=$(which perl)
 
 # Other Variables
 	
-	# Default $FORCE to something so it's at least set
-	FORCE=0
-
 	# Set $DIR for purposes of --init not failing, since we don't really know it yet
 	# Assumes default install location of `/root/loadwatch`. If Wanting a different location, dir should be set via flags
 	if [ "$DIR" == "" ]; then
@@ -136,14 +143,17 @@ then
 fi
 
 
-echo "Processing...";
 
 # Pull load average, log
 LOAD=$(cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}')
 
+echo " * Load = $LOAD, Threshold = $THRESH";
+
 # Trip (check whether or not to run it)
-if [[ $LOAD -eq $THRESH ]] || [[ $FORCE = 1 ]];
+if [[ $LOAD -ge $THRESH ]] || [[ $FORCE = 1 ]];
 then
+
+	echo "Load of $LOAD exceed threshold of $THRESH. Processing";
 
 	# Only log triggered loads. 
 	echo "$(date +%F.%X) - Load: $LOAD" >> "$DIR/checklog"
@@ -352,12 +362,15 @@ then
 	ps auxf >> "$DIR/$FILE"
 
 
-	echo "Emailing loadwatch summary to $EMAIL";
+	echo " * Emailing loadwatch summary to $EMAIL";
 	
  	# Email the notification + summary
 	/bin/mail -s "$SUBJECT" "$EMAIL" < "$DIR/$FILE"
 
+else 
+	echo " * Load normal, exiting.";
 fi
+
 
 # Clean up to remove files older than x days
 find "$DIR"/loadwatch.* -mtime +$REMOVE -exec rm {} \;
