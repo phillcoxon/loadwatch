@@ -2,7 +2,7 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
-echo "Running Loadwatch..."
+echo "Running Loadwatch...";
 
 # Make sure this script isn't already running (we wouldn't want that!)
 if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
@@ -55,6 +55,7 @@ done
 
 if [ -f "$SCRIPTDIR/../config.sh" ]
 then
+		echo "Found config file.";
     	source "$SCRIPTDIR/../config.sh";
 fi
 
@@ -133,6 +134,9 @@ then
 
 	exit
 fi
+
+
+echo "Processing...";
 
 # Pull load average, log
 LOAD=$(cat /proc/loadavg | awk '{print $1}' | awk -F '.' '{print $1}')
@@ -347,6 +351,9 @@ then
 	echo -e "Processes------------------------------------------------------------ \n\n" >> "$DIR/$FILE"
 	ps auxf >> "$DIR/$FILE"
 
+
+	echo "Emailing loadwatch summary to $EMAIL";
+	
  	# Email the notification + summary
 	/bin/mail -s "$SUBJECT" "$EMAIL" < "$DIR/$FILE"
 
