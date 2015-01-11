@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# mysqltuner.pl - Version 1.3.0
+# mysqltuner.pl - Version 1.4.0
 # High Performance MySQL Tuning Script
 # Copyright (C) 2006-2014 Major Hayden - major@mhtx.net
 #
@@ -29,7 +29,7 @@
 #   Blair Christensen      Hans du Plooy        Victor Trac
 #   Everett Barnes         Tom Krouper          Gary Barrueto
 #   Simon Greenaway        Adam Stein           Isart Montane
-#   Baptiste M.
+#   Baptiste M.            Cole Turner
 #
 # Inspired by Matthew Montgomery's tuning-primer.sh script:
 # http://forge.mysql.com/projects/view.php?id=44
@@ -41,7 +41,7 @@ use File::Spec;
 use Getopt::Long;
 
 # Set up a few variables for use in the script
-my $tunerversion = "1.3.0";
+my $tunerversion = "1.4.0";
 my (@adjvars, @generalrec);
 
 # Set defaults
@@ -59,6 +59,7 @@ my %opt = (
 		"pass"			=> 0,
 		"skipsize" 		=> 0,
 		"checkversion" 	=> 0,
+		"buffers" 		=> 0,
 	);
 
 # Gather the options from the command line
@@ -78,6 +79,7 @@ GetOptions(\%opt,
 		'checkversion',
 		'mysqladmin=s',
 		'help',
+		'buffers',
 	);
 
 if (defined $opt{'help'} && $opt{'help'} == 1) { usage(); }
@@ -115,6 +117,7 @@ sub usage {
 		"      --nobad              Remove negative/suggestion responses\n".
 		"      --noinfo             Remove informational responses\n".
 		"      --nocolor            Don't print output in color\n".
+		"      --buffers            Print global and per-thread buffer values\n".
 		"\n";
 	exit;
 }
@@ -529,7 +532,7 @@ sub check_storage_engines {
 	print "\n-------- Storage Engine Statistics -------------------------------------------\n";
 	infoprint "Status: ";
 	my $engines;
-	if (mysql_version_ge(5)) {
+	if (mysql_version_ge(5, 1)) {
 		my @engineresults = `mysql $mysqllogin -Bse "SELECT ENGINE,SUPPORT FROM information_schema.ENGINES WHERE ENGINE NOT IN ('performance_schema','MyISAM','MERGE','MEMORY') ORDER BY ENGINE ASC"`;
 		foreach my $line (@engineresults) {
 			my ($engine,$engineenabled);
@@ -611,6 +614,47 @@ sub check_storage_engines {
 	} else {
 		goodprint "Total fragmented tables: $fragtables\n";
 	}
+
+	
+	# Auto increments
+	my %tblist;
+	# Find the maximum integer
+	my $maxint = `mysql $mysqllogin -Bse "SELECT ~0"`;
+	
+	# Now we build a database list, and loop through it to get storage engine stats for tables
+	my @dblist = `mysql $mysqllogin -Bse "SHOW DATABASES"`;
+	foreach my $db (@dblist) {
+		chomp($db);
+		
+		if(!$tblist{$db})
+		{
+			$tblist{$db} = ();
+		}
+		
+		if ($db eq "information_schema") { next; }
+		my @ia = (0, 10);
+		if (!mysql_version_ge(4, 1)) {
+			# MySQL 3.23/4.0 keeps Data_Length in the 5th (0-based) column
+			@ia = (0, 9);
+		}
+		push(@{$tblist{$db}}, map { [ (split)[@ia] ] } `mysql $mysqllogin -Bse "SHOW TABLE STATUS FROM \\\`$db\\\`"`);
+	}
+	
+	my @dbnames = keys %tblist;
+	
+	foreach my $db (@dbnames) {
+		foreach my $tbl (@{$tblist{$db}}) {
+			my ($name, $autoincrement) = @$tbl;
+			
+			if ($autoincrement =~ /^\d+?$/) {
+				my $percent = ($autoincrement / $maxint) * 100;
+				if($percent >= 75) {
+					badprint "Table '$db.$name' has an autoincrement value near max capacity ($percent%)\n";
+				}
+			}
+		}
+	}
+
 }
 
 my %mycalc;
@@ -698,7 +742,7 @@ sub calculations {
 	# Temporary tables
 	if ($mystat{'Created_tmp_tables'} > 0) {
 		if ($mystat{'Created_tmp_disk_tables'} > 0) {
-			$mycalc{'pct_temp_disk'} = int(($mystat{'Created_tmp_disk_tables'} / ($mystat{'Created_tmp_tables'} + $mystat{'Created_tmp_disk_tables'})) * 100);
+			$mycalc{'pct_temp_disk'} = int(($mystat{'Created_tmp_disk_tables'} / $mystat{'Created_tmp_tables'}) * 100);
 		} else {
 			$mycalc{'pct_temp_disk'} = 0;
 		}
@@ -763,7 +807,34 @@ sub mysql_stats {
 
 	# Memory usage
 	infoprint "Total buffers: ".hr_bytes($mycalc{'server_buffers'})." global + ".hr_bytes($mycalc{'per_thread_buffers'})." per thread ($myvar{'max_connections'} max threads)\n";
-	if ($mycalc{'total_possible_used_memory'} > 2*1024*1024*1024 && $arch eq 32) {
+	
+	if ($opt{buffers} ne 0) {
+		infoprint "Global Buffers\n";
+		infoprint " +-- Key Buffer: " . hr_bytes($myvar{'key_buffer_size'}) . "\n";
+		infoprint " +-- Max Tmp Table: ".hr_bytes($mycalc{'max_tmp_table_size'})."\n";
+		
+		if (defined $myvar{'innodb_buffer_pool_size'}) {
+			infoprint " +-- InnoDB Buffer Pool: " . hr_bytes($myvar{'innodb_buffer_pool_size'}) . "\n";
+		}
+		if (defined $myvar{'innodb_additional_mem_pool_size'}) {
+			infoprint " +-- InnoDB Additional Mem Pool: " . hr_bytes($myvar{'innodb_additional_mem_pool_size'}) . "\n";
+		}
+		if (defined $myvar{'innodb_log_buffer_size'}) {
+			infoprint " +-- InnoDB Log Buffer: " . hr_bytes($myvar{'innodb_log_buffer_size'}) . "\n";
+		}
+		if (defined $myvar{'query_cache_size'}) {
+			infoprint " +-- Query Cache: " . hr_bytes($myvar{'query_cache_size'}) . "\n";
+		}
+		
+		infoprint "Per Thread Buffers\n";
+		infoprint " +-- Read Buffer: " . hr_bytes($myvar{'read_buffer_size'}) . "\n";
+		infoprint " +-- Read RND Buffer: " . hr_bytes($myvar{'read_rnd_buffer_size'}) . "\n";
+		infoprint " +-- Sort Buffer: " . hr_bytes($myvar{'sort_buffer_size'}) . "\n";
+		infoprint " +-- Thread stack: " . hr_bytes($myvar{'thread_stack'}) . "\n";
+		infoprint " +-- Join Buffer: " . hr_bytes($myvar{'join_buffer_size'}) . "\n";
+	}	
+
+	if ($arch && $arch == 32 && $mycalc{'total_possible_used_memory'} > 2*1024*1024*1024) {
 		badprint "Allocating > 2GB RAM on 32-bit systems can cause system instability\n";
 		badprint "Maximum possible memory usage: ".hr_bytes($mycalc{'total_possible_used_memory'})." ($mycalc{'pct_physical_memory'}% of installed RAM)\n";
 	} elsif ($mycalc{'pct_physical_memory'} > 85) {
@@ -826,7 +897,10 @@ sub mysql_stats {
 	} elsif ($myvar{'query_cache_size'} < 1) {
 		badprint "Query cache is disabled\n";
 		push(@adjvars,"query_cache_size (>= 8M)");
-	} elsif ($mystat{'Com_select'} == 0) {
+	} elsif ($myvar{'query_cache_type'} eq "OFF") {
+                badprint "Query cache is disabled\n";
+                push(@adjvars,"query_cache_type (=1)");
+        } elsif ($mystat{'Com_select'} == 0) {
 		badprint "Query cache cannot be analyzed - no SELECT statements executed\n";
 	} else {
 		if ($mycalc{'query_cache_efficiency'} < 20) {
@@ -873,17 +947,17 @@ sub mysql_stats {
 	# Temporary tables
 	if ($mystat{'Created_tmp_tables'} > 0) {
 		if ($mycalc{'pct_temp_disk'} > 25 && $mycalc{'max_tmp_table_size'} < 256*1024*1024) {
-			badprint "Temporary tables created on disk: $mycalc{'pct_temp_disk'}% (".hr_num($mystat{'Created_tmp_disk_tables'})." on disk / ".hr_num($mystat{'Created_tmp_disk_tables'} + $mystat{'Created_tmp_tables'})." total)\n";
+			badprint "Temporary tables created on disk: $mycalc{'pct_temp_disk'}% (".hr_num($mystat{'Created_tmp_disk_tables'})." on disk / ".hr_num($mystat{'Created_tmp_tables'})." total)\n";
 			push(@adjvars,"tmp_table_size (> ".hr_bytes_rnd($myvar{'tmp_table_size'}).")");
 			push(@adjvars,"max_heap_table_size (> ".hr_bytes_rnd($myvar{'max_heap_table_size'}).")");
 			push(@generalrec,"When making adjustments, make tmp_table_size/max_heap_table_size equal");
 			push(@generalrec,"Reduce your SELECT DISTINCT queries without LIMIT clauses");
 		} elsif ($mycalc{'pct_temp_disk'} > 25 && $mycalc{'max_tmp_table_size'} >= 256) {
-			badprint "Temporary tables created on disk: $mycalc{'pct_temp_disk'}% (".hr_num($mystat{'Created_tmp_disk_tables'})." on disk / ".hr_num($mystat{'Created_tmp_disk_tables'} + $mystat{'Created_tmp_tables'})." total)\n";
+			badprint "Temporary tables created on disk: $mycalc{'pct_temp_disk'}% (".hr_num($mystat{'Created_tmp_disk_tables'})." on disk / ".hr_num($mystat{'Created_tmp_tables'})." total)\n";
 			push(@generalrec,"Temporary table size is already large - reduce result set size");
 			push(@generalrec,"Reduce your SELECT DISTINCT queries without LIMIT clauses");
 		} else {
-			goodprint "Temporary tables created on disk: $mycalc{'pct_temp_disk'}% (".hr_num($mystat{'Created_tmp_disk_tables'})." on disk / ".hr_num($mystat{'Created_tmp_disk_tables'} + $mystat{'Created_tmp_tables'})." total)\n";
+			goodprint "Temporary tables created on disk: $mycalc{'pct_temp_disk'}% (".hr_num($mystat{'Created_tmp_disk_tables'})." on disk / ".hr_num($mystat{'Created_tmp_tables'})." total)\n";
 		}
 	} else {
 		# For the sake of space, we will be quiet here
@@ -905,16 +979,18 @@ sub mysql_stats {
 	}
 
 	# Table cache
+	my $table_cache_var = "";
 	if ($mystat{'Open_tables'} > 0) {
 		if ($mycalc{'table_cache_hit_rate'} < 20) {
 			badprint "Table cache hit rate: $mycalc{'table_cache_hit_rate'}% (".hr_num($mystat{'Open_tables'})." open / ".hr_num($mystat{'Opened_tables'})." opened)\n";
 			if (mysql_version_ge(5, 1)) {
-				push(@adjvars,"table_cache (> ".$myvar{'table_open_cache'}.")");
+				$table_cache_var = "table_open_cache";
 			} else {
-				push(@adjvars,"table_cache (> ".$myvar{'table_cache'}.")");
+				$table_cache_var = "table_cache";
 			}
-			push(@generalrec,"Increase table_cache gradually to avoid file descriptor limits");
-			push(@generalrec,"Read this before increasing table_cache over 64: http://bit.ly/1mi7c4C");
+			push(@adjvars,$table_cache_var." (> ".$myvar{$table_cache_var}.")");
+			push(@generalrec,"Increase ".$table_cache_var." gradually to avoid file descriptor limits");
+			push(@generalrec,"Read this before increasing ".$table_cache_var." over 64: http://bit.ly/1mi7c4C");
 		} else {
 			goodprint "Table cache hit rate: $mycalc{'table_cache_hit_rate'}% (".hr_num($mystat{'Open_tables'})." open / ".hr_num($mystat{'Opened_tables'})." opened)\n";
 		}
@@ -997,15 +1073,15 @@ sub make_recommendations {
 print	"\n >>  MySQLTuner $tunerversion - Major Hayden <major\@mhtx.net>\n".
 		" >>  Bug reports, feature requests, and downloads at http://mysqltuner.com/\n".
 		" >>  Run with '--help' for additional options and output filtering\n";
-mysql_setup;					# Gotta login first
-os_setup;						# Set up some OS variables
-get_all_vars;					# Toss variables/status into hashes
+mysql_setup;				# Gotta login first
+os_setup;				# Set up some OS variables
+get_all_vars;				# Toss variables/status into hashes
 validate_mysql_version;			# Check current MySQL version
-check_architecture;				# Suggest 64-bit upgrade
+check_architecture;			# Suggest 64-bit upgrade
 check_storage_engines;			# Show enabled storage engines
 security_recommendations;		# Display some security recommendations
-calculations;					# Calculate everything we need
-mysql_stats;					# Print the server stats
+calculations;				# Calculate everything we need
+mysql_stats;				# Print the server stats
 make_recommendations;			# Make recommendations based on stats
 # ---------------------------------------------------------------------------
 # END 'MAIN'
