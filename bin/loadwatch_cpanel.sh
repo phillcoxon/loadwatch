@@ -2,6 +2,8 @@
 # Created by:	Liquid Web
 # Enhanced by:	Phill Coxon, Will Ashworth
 
+echo "Running Loadwatch..."
+
 # Make sure this script isn't already running (we wouldn't want that!)
 if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
 
@@ -9,6 +11,13 @@ if [[ "$(pidof -x "$(basename "$0")" -o %PPID)" ]]; then exit; fi
 
 # Include our config file if it exists
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Useful functions to help with organization
+function usage
+{
+    echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force]  [--init] [-h | --help]"
+}
+
 
 # Get parameters so we can tailor use of the script on the fly without editing
 while [ "$1" != "" ]; do
@@ -99,12 +108,6 @@ PERL=$(which perl)
 
 # Include MySQL Tuner results
 MYSQL_TUNER="$DIR/bin/thirdparty/mysqltuner.pl"
-
-# Useful functions to help with organization
-function usage
-{
-    echo "usage: loadwatch.sh [-d | --dir] [-e | --email] [-f | --file] [-r | --remove] [-t | --threshold] [-x | --force]  [--init] [-h | --help]"
-}
 
 
 
